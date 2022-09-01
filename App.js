@@ -1,20 +1,96 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import react from 'react';
+// import { StatusBar } from 'expo-status-bar';
+import Addition from './components/Addition';
+import Subtraction from './components/Subtraction';
+import Multiplication from './components/Multiplication'
+import Division from "./components/Division"
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Home from './components/Home';
 
 export default function App() {
+  const Stack = createNativeStackNavigator();
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{
+            title: 'Child Genius',
+            headerStyle: {
+              backgroundColor: 'rgb(82, 82, 194)',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Addition"
+          component={Addition}
+          options={{
+            title: 'Addition',
+            headerStyle: {
+              backgroundColor: 'rgb(82, 82, 194)'
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Subtraction"
+          component={Subtraction}
+          options={{
+            title: 'Subtraction',
+            headerStyle: {
+              backgroundColor: 'rgb(82, 82, 194)'
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Multiplication"
+          component={Multiplication}
+          options={{
+            title: 'Multiplication',
+            headerStyle: {
+              backgroundColor: 'rgb(82, 82, 194)'
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Division"
+          component={Division}
+          options={{
+            title: 'Division',
+            headerStyle: {
+              backgroundColor: 'rgb(82, 82, 194)'
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
