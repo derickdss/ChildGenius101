@@ -4,7 +4,6 @@ const StopWatch = ({showControlButtons = true, autostart=true}) => {
     const [time, setTime] = useState(0);
     const [start, setStart] = useState(autostart);
 
-    console.log('derd, show controle button', showControlButtons)
     useEffect(()=> {
         let interval = null;
 
@@ -26,7 +25,6 @@ const StopWatch = ({showControlButtons = true, autostart=true}) => {
 
     return (
         <div>
-            {/* <h1>Time:</h1> */}
             <span style={{fontSize: 50, color: 'rgb(57, 61, 241)'}}><b>{`${getMinutes()}:${getSeconds()}:${getMilliseconds()}`}</b></span>
             {showControlButtons &&<div>
                 <button onClick={() => setStart(true)}>Start</button>

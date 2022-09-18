@@ -7,7 +7,6 @@ export default function Addition({ navigation, route }) {
     const [quizComplete, setQuizComplete] = useState(false);
     const [correctAnswerCount, setCorrectAnswerCount] = useState(0);
     const [wrongAnswerCount, setWrongAnswerCount] = useState(0);
-    console.log('derd, route', route)
 
     const reloadPage = () => {
         setQuizComplete(false);

@@ -1,8 +1,6 @@
 import { View, Button } from "react-native";
 
 export default function Home({ navigation, route }) {
-    console.log('derd, pract navigation', navigation)
-    console.log('derd, pract route', route)
     return (
         <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
