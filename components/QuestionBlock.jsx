@@ -5,6 +5,7 @@ import getRandomInt from "../utils/getRandomInt";
 import shuffleArray from "../utils/shuffleArray";
 import styles from "../styles/App.styles";
 import AnswerButtons from "./AnswerButtons";
+import StopWatch from "./StopWatch";
 
 export default function QuestionBlock({
     operation,
@@ -169,7 +170,7 @@ export default function QuestionBlock({
                 </View>
             </View>
             <View style={styles.section}>
-                {mode === 'Practice' && (<>
+                {mode === 'Practice' ? (<>
                     <View
                         style={{
                             flexDirection: "row",
@@ -202,7 +203,7 @@ export default function QuestionBlock({
                             disabled={answerValue !== "?"}
                         />
                     </View>
-                </>)}
+                </>) : <StopWatch showControlButtons={false}/>}
                 <View
                     style={{
                         margin: 10,
