@@ -3,10 +3,11 @@ import { View } from "react-native";
 import QuestionBlock from "./QuestionBlock";
 import Result from "./Result";
 
-export default function Addition({ navigation }) {
+export default function Addition({ navigation, route }) {
     const [quizComplete, setQuizComplete] = useState(false);
     const [correctAnswerCount, setCorrectAnswerCount] = useState(0);
     const [wrongAnswerCount, setWrongAnswerCount] = useState(0);
+    console.log('derd, route', route)
 
     const reloadPage = () => {
         setQuizComplete(false);
@@ -27,6 +28,7 @@ export default function Addition({ navigation }) {
             {!quizComplete ? (
                 <QuestionBlock
                     operation={"addition"}
+                    mode={route?.params?.mode}
                     setQuizComplete={setQuizComplete}
                     correctAnswerCount={correctAnswerCount}
                     setCorrectAnswerCount={setCorrectAnswerCount}

@@ -8,6 +8,7 @@ import AnswerButtons from "./AnswerButtons";
 
 export default function QuestionBlock({
     operation,
+    mode,
     setQuizComplete,
     correctAnswerCount,
     setCorrectAnswerCount,
@@ -168,38 +169,40 @@ export default function QuestionBlock({
                 </View>
             </View>
             <View style={styles.section}>
-                <View
-                    style={{
-                        flexDirection: "row",
-                    }}
-                >
-                    <AnswerButtons
-                        answer={`${answerOptions[0]}`}
-                        setAnswerValue={setAnswerValue}
-                        disabled={answerValue !== "?"}
-                    />
-                    <AnswerButtons
-                        answer={`${answerOptions[1]}`}
-                        setAnswerValue={setAnswerValue}
-                        disabled={answerValue !== "?"}
-                    />
-                </View>
-                <View
-                    style={{
-                        flexDirection: "row",
-                    }}
-                >
-                    <AnswerButtons
-                        answer={`${answerOptions[2]}`}
-                        setAnswerValue={setAnswerValue}
-                        disabled={answerValue !== "?"}
-                    />
-                    <AnswerButtons
-                        answer={`${answerOptions[3]}`}
-                        setAnswerValue={setAnswerValue}
-                        disabled={answerValue !== "?"}
-                    />
-                </View>
+                {mode === 'Practice' && (<>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                        }}
+                    >
+                        <AnswerButtons
+                            answer={`${answerOptions[0]}`}
+                            setAnswerValue={setAnswerValue}
+                            disabled={answerValue !== "?"}
+                        />
+                        <AnswerButtons
+                            answer={`${answerOptions[1]}`}
+                            setAnswerValue={setAnswerValue}
+                            disabled={answerValue !== "?"}
+                        />
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                        }}
+                    >
+                        <AnswerButtons
+                            answer={`${answerOptions[2]}`}
+                            setAnswerValue={setAnswerValue}
+                            disabled={answerValue !== "?"}
+                        />
+                        <AnswerButtons
+                            answer={`${answerOptions[3]}`}
+                            setAnswerValue={setAnswerValue}
+                            disabled={answerValue !== "?"}
+                        />
+                    </View>
+                </>)}
                 <View
                     style={{
                         margin: 10,

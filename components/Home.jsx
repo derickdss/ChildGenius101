@@ -1,5 +1,4 @@
 import { Text, View, Button } from "react-native";
-import styles from "../styles/App.styles";
 
 export default function Home({ navigation }) {
     return (
@@ -11,7 +10,7 @@ export default function Home({ navigation }) {
                     <Button
                         style={{}}
                         title={"Addition"}
-                        onPress={() => navigation.navigate("Addition")}
+                        onPress={() => navigation.navigate('PracticeChallenge', {operation :'Addition'})}
                     />
                     {/* I see the button text used from the title tag, 
                     dont see the purpose of the content here */}
@@ -22,21 +21,21 @@ export default function Home({ navigation }) {
                     <Button
                         style={{}}
                         title={"Subtraction"}
-                        onPress={() => navigation.navigate("Subtraction")}
+                        onPress={() => navigation.navigate('PracticeChallenge', {operation :'Subtraction'})}
                     />
                 </View>
                 <View style={{ marginTop: 10 }}>
                     <Button
                         style={{}}
                         title={"Multiplication"}
-                        onPress={() => navigation.navigate("Multiplication")}
+                        onPress={() => navigation.navigate('PracticeChallenge', {operation :'Multiplication'})}
                     />
                 </View>
                 <View style={{ marginTop: 10 }}>
                     <Button
                         style={{}}
                         title={"Division"}
-                        onPress={() => navigation.navigate("Division")}
+                        onPress={() => navigation.navigate('PracticeChallenge', {operation :'Division'})}
                     />
                 </View>
             </View>
