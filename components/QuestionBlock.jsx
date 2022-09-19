@@ -46,9 +46,29 @@ export default function QuestionBlock({
 
     const setQuestionAndAnswers = async () => {
         if(mode==="Challenge" && inputValue !== ' ') {
-            setResults([...results, { question: `${operand1} ${operator} ${operand2} = `,answerInput: inputValue, correctAnswer: answer, answerCorrect: inputValue===answer}]);
+            setResults(
+                [
+                    ...results, 
+                    { 
+                        question: `${operand1} ${operator} ${operand2} = `, 
+                        answerInput: inputValue, 
+                        correctAnswer: answer, 
+                        answerCorrect: inputValue===answer
+                    }
+                ]
+            );
         } else if(mode==="Practice" && answerValue !== ' ') {
-            setResults([...results, { question: `${operand1} ${operator} ${operand2} = `,answerInput: answerValue, correctAnswer: answer, answerCorrect: answerValue===answer}]);
+            setResults(
+                [
+                    ...results, 
+                    { 
+                        question: `${operand1} ${operator} ${operand2} = `,
+                        answerInput: answerValue, 
+                        correctAnswer: answer, 
+                        answerCorrect: answerValue===answer
+                    }
+                ]
+            );
         }
 
         setAnswerHighlightStyle(null);
@@ -154,11 +174,6 @@ export default function QuestionBlock({
             setResult(results)
         }
     }, [questionNumber]);
-
-    console.log('derd, input value', inputValue);
-    console.log('derd, answer input ', answerValue);
-    console.log('derd, answer', answer);
-    console.log('derd, results', results);
 
     return (
         <View>

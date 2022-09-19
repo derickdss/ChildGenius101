@@ -2,7 +2,9 @@ import react from "react";
 import { Text, Button, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const ResultStatement = ({ correctAnswerCount, wrongAnswerCount, result }) => {
+const ResultStatement = ({ result }) => {
+    const correctAnswerCount = result.filter((res)=> res.answerCorrect).length;
+    const wrongAnswerCount = result.length - correctAnswerCount;
     return (
         <Text style={{fontSize:20, fontWeight: 500}}>
             You Scored{" "}
@@ -71,6 +73,7 @@ const Result = ({ correctAnswerCount, wrongAnswerCount, reloadPage, result }) =>
             <ResultStatement
                 correctAnswerCount={correctAnswerCount}
                 wrongAnswerCount={wrongAnswerCount}
+                result={result}
             />
             <ResultOptions reloadPage={reloadPage} />
             <Answers result={result}/>
