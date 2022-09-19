@@ -8,6 +8,7 @@ export default function Multiplication({ navigation, route }) {
     const [quizComplete, setQuizComplete] = useState(false);
     const [correctAnswerCount, setCorrectAnswerCount] = useState(0);
     const [wrongAnswerCount, setWrongAnswerCount] = useState(0);
+    const [result, setResult] = useState([])
 
     const reloadPage = () => {
         setQuizComplete(false);
@@ -34,6 +35,7 @@ export default function Multiplication({ navigation, route }) {
                     setCorrectAnswerCount={setCorrectAnswerCount}
                     wrongAnswerCount={wrongAnswerCount}
                     setWrongAnswerCount={setWrongAnswerCount}
+                    setResult={setResult}
                 />
             ) : (
                 <View>
@@ -41,6 +43,7 @@ export default function Multiplication({ navigation, route }) {
                         correctAnswerCount={correctAnswerCount}
                         wrongAnswerCount={wrongAnswerCount}
                         reloadPage={reloadPage}
+                        result={result}
                     />
                 </View>
             )}

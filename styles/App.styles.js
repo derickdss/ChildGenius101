@@ -22,6 +22,18 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingBottom: 5
     },
+    inputAnswer: {
+        padding: 12,
+        paddingBottom: 5,
+        maxWidth: 84,
+        borderWidth: 1, 
+        borderColor: 'rgb(57, 61, 241)', 
+        color: 'rgb(57, 61, 241)', 
+        backgroundColor: 'lightgrey',
+        fontSize: 40,
+        fontWeight: 'bold', 
+        marginTop: 8
+    },
     operand: {
         // backgroundColor: 'lightblue'
         borderBottomWidth: 1,
@@ -32,7 +44,10 @@ const styles = StyleSheet.create({
     },
     answer: {
         borderBottomWidth: 1,
+        padding: 20,
+        paddingBottom: 5,
         borderBottomColor: 'rgb(57, 61, 241)',
+        backgroundColor: 'lightgrey',
     },
     answerCorrect: {
         backgroundColor: 'lightgreen'
