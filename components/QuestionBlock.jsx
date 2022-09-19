@@ -27,12 +27,12 @@ export default function QuestionBlock({
         styles.answer,
         answerHighlightStyle,
     ];
-    // const messageStatement =
-    //     answerValue !== "?"
-    //         ? answerCorrect
-    //             ? "Correct answer!"
-    //             : "Incorrect answer"
-    //         : "";
+    const messageStatement =
+        answerValue !== "?"
+            ? answerCorrect
+                ? "Correct answer!"
+                : "Incorrect answer"
+            : "";
     const [operand1, setOperand1] = useState();
     const [operand2, setOperand2] = useState();
     const [answer, setAnswer] = useState();
@@ -148,7 +148,6 @@ export default function QuestionBlock({
     };
 
     useEffect(() => {
-        console.log('derd, amswer value change useEffect to highlight')
         if (answerValue === " ") {
             return;
         } else if (answerValue === answer) {
@@ -163,12 +162,10 @@ export default function QuestionBlock({
     }, [answerValue]);
 
     useEffect(() => {
-        console.log('derd, onload useEffect to set blank answer')
         setQuestionAndAnswers();
     }, []);
 
     useEffect(() => {
-        console.log('derd, question number change useEffect to check end')
         if (questionNumber > numberOfQuestionPerExercise) {
             setQuizComplete(true);
             setResult(results)
@@ -213,6 +210,14 @@ export default function QuestionBlock({
                     }
                 </View>
             </View>
+            { mode === 'Practice' && answerValue !== " " && (
+                <span style={{
+                    fontSize: 20,
+                    fontWeight: 'bold', 
+                    textAlign: 'center',
+                    color: 'blue'
+                }}>{messageStatement}</span>
+            )}
             <View style={styles.section}>
                 {mode === 'Practice' ? (<>
                     <View
