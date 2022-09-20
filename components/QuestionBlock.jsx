@@ -49,7 +49,8 @@ export default function QuestionBlock({
             setResults(
                 [
                     ...results, 
-                    { 
+                    {
+                        key: `${operand1}_${operator}_${operand2}_${results.length}`, 
                         question: `${operand1} ${operator} ${operand2} = `, 
                         answerInput: inputValue, 
                         correctAnswer: answer, 
@@ -62,6 +63,7 @@ export default function QuestionBlock({
                 [
                     ...results, 
                     { 
+                        key: `${operand1}_${operator}_${operand2}_${results.length}`, 
                         question: `${operand1} ${operator} ${operand2} = `,
                         answerInput: answerValue, 
                         correctAnswer: answer, 
@@ -211,12 +213,12 @@ export default function QuestionBlock({
                 </View>
             </View>
             { mode === 'Practice' && answerValue !== " " && (
-                <span style={{
+                <Text style={{
                     fontSize: 20,
                     fontWeight: 'bold', 
                     textAlign: 'center',
                     color: 'blue'
-                }}>{messageStatement}</span>
+                }}>{messageStatement}</Text>
             )}
             <View style={styles.section}>
                 {mode === 'Practice' ? (<>
