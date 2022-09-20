@@ -52,9 +52,9 @@ export default function QuestionBlock({
                     {
                         key: `${operand1}_${operator}_${operand2}_${results.length}`, 
                         question: `${operand1} ${operator} ${operand2} = `, 
-                        answerInput: inputValue, 
+                        answerInput: parseInt(inputValue), 
                         correctAnswer: answer, 
-                        answerCorrect: inputValue===answer
+                        answerCorrect: parseInt(inputValue)===answer
                     }
                 ]
             );

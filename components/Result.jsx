@@ -40,7 +40,6 @@ const ResultOptions = ({ reloadPage }) => {
 };
 
 const Answers = ({result}) => {
-    console.log('derd, result', result)
     return(
         <View style={{ marginTop:25}}>
             <Text style={{fontWeight: 'bold', marginTop: 20}}>Answers:</Text>
@@ -53,10 +52,9 @@ const Answers = ({result}) => {
                             {item.question}
                         <Text 
                             style={{
-                                textDecoration: parseInt(item.answerInput) !== item.correctAnswer ? 'under-line' : 'none',
-                                color: parseInt(item.answerInput) === item.correctAnswer ? 'green' : 'red', 
+                                color: item.answerInput === item.correctAnswer ? 'green' : 'red', 
                             }}>
-                                {item.answerInput}{ parseInt(item.answerInput) !== item.correctAnswer &&
+                                {item.answerInput}{ item.answerInput !== item.correctAnswer &&
                             <Text style={{color:  'green'}}>
                                 {` => ${item.correctAnswer}`}
                             </Text>
