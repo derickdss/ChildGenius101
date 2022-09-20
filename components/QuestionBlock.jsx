@@ -93,9 +93,9 @@ export default function QuestionBlock({
 
         setOperand1(number1);
         setOperand2(number2);
-        const randomNumberOne = getRandomInt(1, maxOperandValue - 7);
-        const randomNumberTwo = getRandomInt(1, maxOperandValue - 7);
-        const randomNumberThree = getRandomInt(1, maxOperandValue - 7);
+        const randomNumberOne = getRandomInt(1, maxOperandValue - 6);
+        const randomNumberTwo = getRandomInt(4, maxOperandValue - 3);
+        const randomNumberThree = getRandomInt(1, maxOperandValue - 5);
 
         let answers = [];
         if (operation === "addition") {
