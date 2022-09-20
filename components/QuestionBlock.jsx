@@ -94,7 +94,7 @@ export default function QuestionBlock({
         setOperand1(number1);
         setOperand2(number2);
         const randomNumberOne = getRandomInt(1, maxOperandValue - 6);
-        const randomNumberTwo = getRandomInt(4, maxOperandValue - 3);
+        const randomNumberTwo = getRandomInt(5, maxOperandValue);
         const randomNumberThree = getRandomInt(1, maxOperandValue - 5);
 
         let answers = [];
@@ -206,7 +206,7 @@ export default function QuestionBlock({
                     <Text style={[styles.questionBlock, styles.equals]}>=</Text>
                     {mode === 'Practice' ? 
                         <Text style={answerStyle}>{answerValue}</Text> : (
-                        <TextInput 
+                        <TextInput
                             style={styles.inputAnswer} 
                             value={inputValue} 
                             onChangeText={(text) => setInputValue(parseInt(Math.trunc(text.replace(/[^.0-9]/ig, ""))))}/>
