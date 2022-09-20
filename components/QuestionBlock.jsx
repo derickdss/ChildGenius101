@@ -176,6 +176,13 @@ export default function QuestionBlock({
         }
     }, [questionNumber]);
 
+    const handleTextInput = (text) =>{
+        const numberString = text.replace(/[^0-9]/ig, "");
+        setInputValue(numberString)
+    }
+
+
+    console.log('derd, input value', inputValue)
     return (
         <View>
             <View style={styles.section}>
@@ -209,7 +216,8 @@ export default function QuestionBlock({
                         <TextInput
                             style={styles.inputAnswer} 
                             value={inputValue} 
-                            onChangeText={(text) => setInputValue(parseInt(Math.trunc(text.replace(/[^.0-9]/ig, ""))))}/>
+                            // onChangeText={(text) => setInputValue(parseInt(Math.trunc(text.replace(/[^.0-9]/ig, ""))))}/>
+                            onChangeText={(text) => handleTextInput(text)}/>
                         )
                     }
                 </View>
