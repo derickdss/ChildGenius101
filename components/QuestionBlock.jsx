@@ -1,21 +1,26 @@
 import react, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, View, Button } from "react-native";
+import { TextInput, Text, View, Button } from "react-native";
 import getRandomInt from "../utils/getRandomInt";
 import shuffleArray from "../utils/shuffleArray";
 import styles from "../styles/App.styles";
 import AnswerButtons from "./AnswerButtons";
+import StopWatch from "./StopWatch";
 
 export default function QuestionBlock({
     operation,
+    mode,
     setQuizComplete,
     correctAnswerCount,
     setCorrectAnswerCount,
     wrongAnswerCount,
     setWrongAnswerCount,
+    setResult
 }) {
     const [answerCorrect, setAnswerCorrect] = useState();
-    const [answerValue, setAnswerValue] = useState("?");
+    const [answerValue, setAnswerValue] = useState(" ");
+    const [inputValue, setInputValue]  = useState(" ");
+    const [results, setResults] = useState([])
     const [answerHighlightStyle, setAnswerHighlightStyle] = useState(null);
     let answerStyle = [
         styles.questionBlock,
@@ -40,12 +45,39 @@ export default function QuestionBlock({
     const numberOfQuestionPerExercise = 10;
 
     const setQuestionAndAnswers = async () => {
+        if(mode==="Challenge" && inputValue !== ' ') {
+            setResults(
+                [
+                    ...results, 
+                    { 
+                        question: `${operand1} ${operator} ${operand2} = `, 
+                        answerInput: inputValue, 
+                        correctAnswer: answer, 
+                        answerCorrect: inputValue===answer
+                    }
+                ]
+            );
+        } else if(mode==="Practice" && answerValue !== ' ') {
+            setResults(
+                [
+                    ...results, 
+                    { 
+                        question: `${operand1} ${operator} ${operand2} = `,
+                        answerInput: answerValue, 
+                        correctAnswer: answer, 
+                        answerCorrect: answerValue===answer
+                    }
+                ]
+            );
+        }
+
         setAnswerHighlightStyle(null);
         if (operation === "multiplication" || operation === "division") {
             setMaxOperandValue(12);
         }
         setQuestionNumber(questionNumber + 1);
-        setAnswerValue("?");
+        setAnswerValue(" ");
+        setInputValue(" ")
         setAnswerCorrect();
         let number1 = getRandomInt(1, maxOperandValue);
         let number2 = getRandomInt(1, maxOperandValue);
@@ -116,7 +148,7 @@ export default function QuestionBlock({
     };
 
     useEffect(() => {
-        if (answerValue === "?") {
+        if (answerValue === " ") {
             return;
         } else if (answerValue === answer) {
             setAnswerHighlightStyle(styles.answerCorrect);
@@ -136,6 +168,7 @@ export default function QuestionBlock({
     useEffect(() => {
         if (questionNumber > numberOfQuestionPerExercise) {
             setQuizComplete(true);
+            setResult(results)
         }
     }, [questionNumber]);
 
@@ -144,13 +177,16 @@ export default function QuestionBlock({
             <View style={styles.section}>
                 <View style={{ display: "flex" }}>
                     <Text>
-                        Question {questionNumber}/10 [ Score :{" "}
+                        Question {questionNumber}/10 
+                        {mode === "Practice" && <>
+                        [ Score :{" "}
                         <Text style={{ color: "green" }}>
                             {correctAnswerCount}
                         </Text>{" "}
                         /{" "}
                         <Text style={{ color: "red" }}>{wrongAnswerCount}</Text>{" "}
                         ]
+                        </>}
                     </Text>
                 </View>
                 <View style={{ display: "flex", flexDirection: "row" }}>
@@ -164,42 +200,60 @@ export default function QuestionBlock({
                         {operand2}
                     </Text>
                     <Text style={[styles.questionBlock, styles.equals]}>=</Text>
-                    <Text style={answerStyle}>{answerValue}</Text>
+                    {mode === 'Practice' ? 
+                        <Text style={answerStyle}>{answerValue}</Text> : (
+                        <TextInput 
+                            style={styles.inputAnswer} 
+                            value={inputValue} 
+                            onChangeText={(text) => setInputValue(parseInt(Math.trunc(text.replace(/[^.0-9]/ig, ""))))}/>
+                        )
+                    }
                 </View>
             </View>
+            { mode === 'Practice' && answerValue !== " " && (
+                <span style={{
+                    fontSize: 20,
+                    fontWeight: 'bold', 
+                    textAlign: 'center',
+                    color: 'blue'
+                }}>{messageStatement}</span>
+            )}
             <View style={styles.section}>
-                <View
-                    style={{
-                        flexDirection: "row",
-                    }}
-                >
-                    <AnswerButtons
-                        answer={`${answerOptions[0]}`}
-                        setAnswerValue={setAnswerValue}
-                        disabled={answerValue !== "?"}
-                    />
-                    <AnswerButtons
-                        answer={`${answerOptions[1]}`}
-                        setAnswerValue={setAnswerValue}
-                        disabled={answerValue !== "?"}
-                    />
-                </View>
-                <View
-                    style={{
-                        flexDirection: "row",
-                    }}
-                >
-                    <AnswerButtons
-                        answer={`${answerOptions[2]}`}
-                        setAnswerValue={setAnswerValue}
-                        disabled={answerValue !== "?"}
-                    />
-                    <AnswerButtons
-                        answer={`${answerOptions[3]}`}
-                        setAnswerValue={setAnswerValue}
-                        disabled={answerValue !== "?"}
-                    />
-                </View>
+                {mode === 'Practice' ? (<>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                        }}
+                    >
+                        <AnswerButtons
+                            answer={`${answerOptions[0]}`}
+                            setAnswerValue={setAnswerValue}
+                            disabled={answerValue !== " "}
+                        />
+                        <AnswerButtons
+                            answer={`${answerOptions[1]}`}
+                            setAnswerValue={setAnswerValue}
+                            disabled={answerValue !== " "}
+                        />
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                        }}
+                    >
+                        <AnswerButtons
+                            answer={`${answerOptions[2]}`}
+                            setAnswerValue={setAnswerValue}
+                            disabled={answerValue !== " "}
+                        />
+                        <AnswerButtons
+                            answer={`${answerOptions[3]}`}
+                            setAnswerValue={setAnswerValue}
+                            disabled={answerValue !== " "}
+                        />
+                    </View>
+                </>) : null }
+                {/* <StopWatch showControlButtons={false}/>} */}
                 <View
                     style={{
                         margin: 10,
@@ -211,7 +265,7 @@ export default function QuestionBlock({
                         style={{}}
                         title={"Next"}
                         onPress={() => setQuestionAndAnswers()}
-                        disabled={answerValue === "?"}
+                        disabled={answerValue === " " && inputValue === " "}
                     ></Button>
                 </View>
             </View>

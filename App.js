@@ -2,8 +2,9 @@ import react from 'react';
 // import { StatusBar } from 'expo-status-bar';
 import Addition from './components/Addition';
 import Subtraction from './components/Subtraction';
-import Multiplication from './components/Multiplication'
-import Division from "./components/Division"
+import Multiplication from './components/Multiplication';
+import Division from './components/Division';
+import PracticeChallenge from './components/PracticeChallenge';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './components/Home';
@@ -80,6 +81,21 @@ export default function App() {
           component={Division}
           options={{
             title: 'Division',
+            headerStyle: {
+              backgroundColor: 'rgb(82, 82, 194)'
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+        <Stack.Screen
+          name="PracticeChallenge"
+          component={PracticeChallenge}
+          options={{
+            title: 'Practice or Challenge?',
             headerStyle: {
               backgroundColor: 'rgb(82, 82, 194)'
             },

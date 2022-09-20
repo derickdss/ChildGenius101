@@ -3,11 +3,12 @@ import { View } from "react-native";
 import QuestionBlock from "./QuestionBlock";
 import Result from "./Result";
 
-export default function Division({ navigation }) {
+export default function Division({ navigation, route }) {
     const [buttonText, setButtonText] = useState("Click Me");
     const [quizComplete, setQuizComplete] = useState(false);
     const [correctAnswerCount, setCorrectAnswerCount] = useState(0);
     const [wrongAnswerCount, setWrongAnswerCount] = useState(0);
+    const [result, setResult] = useState([])
 
     const reloadPage = () => {
         setQuizComplete(false);
@@ -28,11 +29,13 @@ export default function Division({ navigation }) {
             {!quizComplete ? (
                 <QuestionBlock
                     operation={"division"}
+                    mode={route.params.mode}
                     setQuizComplete={setQuizComplete}
                     correctAnswerCount={correctAnswerCount}
                     setCorrectAnswerCount={setCorrectAnswerCount}
                     wrongAnswerCount={wrongAnswerCount}
                     setWrongAnswerCount={setWrongAnswerCount}
+                    setResult={setResult}
                 />
             ) : (
                 <View>
@@ -40,6 +43,7 @@ export default function Division({ navigation }) {
                         correctAnswerCount={correctAnswerCount}
                         wrongAnswerCount={wrongAnswerCount}
                         reloadPage={reloadPage}
+                        result={result}
                     />
                 </View>
             )}
