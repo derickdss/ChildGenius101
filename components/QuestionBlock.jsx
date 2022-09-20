@@ -113,6 +113,8 @@ export default function QuestionBlock({
                 let temp = number1;
                 number1 = number2;
                 number2 = temp;
+                setOperand1(number1);
+                setOperand2(number2);
             }
             const subtractionAnswers = [
                 number1 - number2,
