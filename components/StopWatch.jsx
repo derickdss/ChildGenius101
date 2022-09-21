@@ -1,11 +1,22 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from "react";
+import { Text } from "react-native";
 
-const StopWatch = ({showControlButtons = true, autostart=true}) => {
+const StopWatch = ({autostart=true, stop=false, saveTimerValue}) => {
     const [time, setTime] = useState(0);
     const [start, setStart] = useState(autostart);
 
+    const getMinutes = () => ("0" + Math.floor((time / 60000) % 60)).slice(-2)
+    const getSeconds = () => ("0" + Math.floor((time / 1000) % 60)).slice(-2)
+    const getMilliseconds = () => ("0" + ((time / 10) % 1000)).slice(-2)
+
+
     useEffect(()=> {
         let interval = null;
+
+        if(stop) {
+            saveTimerValue(`${getMinutes()}:${getSeconds()}:${getMilliseconds()}`);
+            clearInterval(interval);
+        }
 
         if(start) {
             interval = setInterval(()=> {
@@ -17,22 +28,17 @@ const StopWatch = ({showControlButtons = true, autostart=true}) => {
 
         return () => clearInterval(interval);
 
-    }, [start])
+    }, [start, stop])
 
-    const getMinutes = () => ("0" + Math.floor((time / 60000) % 60)).slice(-2)
-    const getSeconds = () => ("0" + Math.floor((time / 1000) % 60)).slice(-2)
-    const getMilliseconds = () => ("0" + ((time / 10) % 1000)).slice(-2)
-
-    return (
-        <div>
-            <span style={{fontSize: 50, color: 'rgb(57, 61, 241)'}}><b>{`${getMinutes()}:${getSeconds()}:${getMilliseconds()}`}</b></span>
-            {showControlButtons &&<div>
-                <button onClick={() => setStart(true)}>Start</button>
-                <button onClick={() => setStart(false)}>Stop</button>
-                <button onClick={() => {setTime(0); setStart(false);}}>Reset</button>
-            </div>}
-        </div>
-    )
-}
+    
+  return (
+    <Text>
+        <Text style={{fontSize: 50, fontWeight: 'bold', color: 'rgb(57, 61, 241)'}}>
+            {`${getMinutes()}:${getSeconds()}:${getMilliseconds()}`}
+        </Text>
+        <Text numberOfLines={5}>body</Text>
+    </Text>
+  );
+};
 
 export default StopWatch;

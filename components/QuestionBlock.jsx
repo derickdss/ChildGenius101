@@ -15,13 +15,15 @@ export default function QuestionBlock({
     setCorrectAnswerCount,
     wrongAnswerCount,
     setWrongAnswerCount,
-    setResult
+    setResult,
+    setTimerValue
 }) {
     const [answerCorrect, setAnswerCorrect] = useState();
     const [answerValue, setAnswerValue] = useState(" ");
     const [inputValue, setInputValue]  = useState(" ");
     const [results, setResults] = useState([])
     const [answerHighlightStyle, setAnswerHighlightStyle] = useState(null);
+    const [stopTimer, setStopTimer]= useState(false);
     let answerStyle = [
         styles.questionBlock,
         styles.answer,
@@ -42,7 +44,7 @@ export default function QuestionBlock({
     const [operator, setOperator] = useState("");
     const [maxOperandValue, setMaxOperandValue] = useState(15);
     const maxOptionRandomValue = 5;
-    const numberOfQuestionPerExercise = 10;
+    const numberOfQuestionPerExercise = 1;
 
     const setQuestionAndAnswers = async () => {
         if(mode==="Challenge" && inputValue !== ' ') {
@@ -171,10 +173,16 @@ export default function QuestionBlock({
 
     useEffect(() => {
         if (questionNumber > numberOfQuestionPerExercise) {
-            setQuizComplete(true);
+            setStopTimer(true);
             setResult(results)
         }
     }, [questionNumber]);
+
+    useEffect(()=>{
+        if(stopTimer) {
+            setQuizComplete(true);
+        }
+    },[stopTimer])
 
     const handleTextInput = (text) =>{
         const numberString = text.replace(/[^0-9]/ig, "");
@@ -214,7 +222,6 @@ export default function QuestionBlock({
                         <TextInput
                             style={styles.inputAnswer} 
                             value={inputValue} 
-                            // onChangeText={(text) => setInputValue(parseInt(Math.trunc(text.replace(/[^.0-9]/ig, ""))))}/>
                             onChangeText={(text) => handleTextInput(text)}/>
                         )
                     }
@@ -263,7 +270,7 @@ export default function QuestionBlock({
                         />
                     </View>
                 </>) : null }
-                {/* <StopWatch showControlButtons={false}/>} */}
+                { mode === 'Challenge' ? <StopWatch stop={stopTimer} saveTimerValue={setTimerValue}/> : null}
                 <View
                     style={{
                         margin: 10,
