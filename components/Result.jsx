@@ -39,7 +39,8 @@ const ResultOptions = ({ reloadPage }) => {
     );
 };
 
-const Answers = ({result}) => (
+const Answers = ({result}) => {
+    return(
         <View style={{ marginTop:25}}>
             <Text style={{fontWeight: 'bold', marginTop: 20}}>Answers:</Text>
             <View style={{alignItems:'center'}}>
@@ -51,7 +52,6 @@ const Answers = ({result}) => (
                             {item.question}
                         <Text 
                             style={{
-                                textDecoration: item.answerInput !== item.correctAnswer ? 'under-line' : 'none',
                                 color: item.answerInput === item.correctAnswer ? 'green' : 'red', 
                             }}>
                                 {item.answerInput}{ item.answerInput !== item.correctAnswer &&
@@ -68,7 +68,7 @@ const Answers = ({result}) => (
                 
             </View>
         </View>
-    )
+    )}
 
 const Result = ({ correctAnswerCount, wrongAnswerCount, reloadPage, result }) => {
     return (

@@ -52,9 +52,9 @@ export default function QuestionBlock({
                     {
                         key: `${operand1}_${operator}_${operand2}_${results.length}`, 
                         question: `${operand1} ${operator} ${operand2} = `, 
-                        answerInput: inputValue, 
+                        answerInput: parseInt(inputValue), 
                         correctAnswer: answer, 
-                        answerCorrect: inputValue===answer
+                        answerCorrect: parseInt(inputValue)===answer
                     }
                 ]
             );
@@ -93,9 +93,9 @@ export default function QuestionBlock({
 
         setOperand1(number1);
         setOperand2(number2);
-        const randomNumberOne = getRandomInt(1, maxOperandValue - 7);
-        const randomNumberTwo = getRandomInt(1, maxOperandValue - 7);
-        const randomNumberThree = getRandomInt(1, maxOperandValue - 7);
+        const randomNumberOne = getRandomInt(1, maxOperandValue - 6);
+        const randomNumberTwo = getRandomInt(5, maxOperandValue);
+        const randomNumberThree = getRandomInt(1, maxOperandValue - 5);
 
         let answers = [];
         if (operation === "addition") {
@@ -113,6 +113,8 @@ export default function QuestionBlock({
                 let temp = number1;
                 number1 = number2;
                 number2 = temp;
+                setOperand1(number1);
+                setOperand2(number2);
             }
             const subtractionAnswers = [
                 number1 - number2,
@@ -174,6 +176,11 @@ export default function QuestionBlock({
         }
     }, [questionNumber]);
 
+    const handleTextInput = (text) =>{
+        const numberString = text.replace(/[^0-9]/ig, "");
+        setInputValue(numberString);
+    }
+
     return (
         <View>
             <View style={styles.section}>
@@ -204,10 +211,11 @@ export default function QuestionBlock({
                     <Text style={[styles.questionBlock, styles.equals]}>=</Text>
                     {mode === 'Practice' ? 
                         <Text style={answerStyle}>{answerValue}</Text> : (
-                        <TextInput 
+                        <TextInput
                             style={styles.inputAnswer} 
                             value={inputValue} 
-                            onChangeText={(text) => setInputValue(parseInt(Math.trunc(text.replace(/[^.0-9]/ig, ""))))}/>
+                            // onChangeText={(text) => setInputValue(parseInt(Math.trunc(text.replace(/[^.0-9]/ig, ""))))}/>
+                            onChangeText={(text) => handleTextInput(text)}/>
                         )
                     }
                 </View>
