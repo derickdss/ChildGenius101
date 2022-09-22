@@ -1,6 +1,6 @@
 import { View, Button } from "react-native";
 
-export default function Home({ navigation, route }) {
+export default function PracticeChallenge({ navigation, route }) {
     return (
         <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
