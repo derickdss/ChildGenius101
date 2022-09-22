@@ -14,14 +14,14 @@ const StopWatch = ({autostart=true, stop=false, saveTimerValue}) => {
         let interval = null;
 
         if(stop) {
-            saveTimerValue(`${getMinutes()}:${getSeconds()}:${getMilliseconds()}`);
+            saveTimerValue(`${getMinutes()}:${getSeconds()}s`);
             clearInterval(interval);
         }
 
         if(start) {
             interval = setInterval(()=> {
-                setTime(prevTime => prevTime + 10)
-            }, 10)
+                setTime(prevTime => prevTime + 1000)
+            }, 1000)
         } else {
             clearInterval(interval)
         }
@@ -32,11 +32,10 @@ const StopWatch = ({autostart=true, stop=false, saveTimerValue}) => {
 
     
   return (
-    <Text>
+    <Text style={{ width: 300, paddingLeft: 80, paddingTop: 30}}>
         <Text style={{fontSize: 50, fontWeight: 'bold', color: 'rgb(57, 61, 241)'}}>
-            {`${getMinutes()}:${getSeconds()}:${getMilliseconds()}`}
+            {`${getMinutes()}:${getSeconds()}`}
         </Text>
-        <Text numberOfLines={5}>body</Text>
     </Text>
   );
 };

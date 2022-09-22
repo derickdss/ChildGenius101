@@ -15,12 +15,12 @@ const ResultStatement = ({ result, resultTime }) => {
       }, []);
     
     return (
-        <Text style={{fontSize:20, fontWeight: 'bold', width: 550, display: 'flex', flexDirection: 'column', alignItems:'center'}}>
-            <Text>You Scored</Text>
-            <Text><Text style={{ color: "green" }}>{` ${correctAnswerCount} `}</Text>correct and </Text>
-            <Text><Text style={{ color: "red" }}>{` ${wrongAnswerCount} `}</Text>incorrect answers</Text>
-            <Text>{showText && resultTime ? <Text>{`Time: ${resultTime}`}</Text> :<Text>         </Text>}</Text>
-        </Text>
+        <View style={{display: 'flex', flexDirection:'column', alignItems: 'center'}}>
+            <Text style={{fontSize:20, fontWeight: 'bold' }}>You Scored</Text>
+            <Text style={{fontSize:20, fontWeight: 'bold' }}><Text style={{ color: "green" }}>{` ${correctAnswerCount} `}</Text>correct and </Text>
+            <Text style={{fontSize:20, fontWeight: 'bold' }}><Text style={{ color: "red" }}>{` ${wrongAnswerCount} `}</Text>incorrect answers</Text>
+            <Text style={{fontSize:20, fontWeight: 'bold' }}>{showText && resultTime ? <Text style={{textAlign: 'center'}}>{`Time: ${resultTime}`}</Text> :<Text>         </Text>}</Text>
+        </View>
     );
 };
 
@@ -35,10 +35,10 @@ const ResultOptions = ({ reloadPage }) => {
                 margin: 10,
             }}
         >
-            <View style={{  marginLeft: 10, marginRight: 5 }}>
+            <View style={{  marginLeft: 10, marginRight: 5, width: 80 }}>
                 <Button title="Retake" onPress={reloadPage} />
             </View>
-            <View style={{ marginLeft: 10, marginRight: 5 }}>
+            <View style={{ marginLeft: 10, marginRight: 5, width: 80 }}>
                 <Button
                     title="Home"
                     onPress={() => navigation.navigate("Home")}
@@ -50,9 +50,9 @@ const ResultOptions = ({ reloadPage }) => {
 
 const Answers = ({result}) => {
     return(
-        <View style={{ marginTop:25, alignItems:'center'}}>
-            <Text style={{fontWeight: 'bold', marginTop: 20}}>Answers:</Text>
-            <View style={{alignItems:'center'}}>
+        <View style={{ paddingTop:25, display: 'flex', paddingLeft: 20}}>
+            <Text style={{fontWeight: 'bold'}}>Answers:</Text>
+            <View>
             <FlatList 
                 data={result}
                 renderItem={({item, index}) => 
@@ -82,7 +82,7 @@ const Answers = ({result}) => {
 const Result = ({ correctAnswerCount, wrongAnswerCount, reloadPage, result, resultTime }) => {
     console.log('derd, result time', resultTime)
     return (
-        <View style={{display:'flex', justifyContent:'center'}}>
+        <View style={{display:'flex', justifyContent: 'flex-start', marginTop: 250}}>
             <ResultStatement
                 result={result}
                 resultTime={resultTime}

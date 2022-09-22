@@ -47,20 +47,7 @@ export default function QuestionBlock({
     const numberOfQuestionPerExercise = 1;
 
     const setQuestionAndAnswers = async () => {
-        if(mode==="Challenge" && inputValue !== ' ') {
-            setResults(
-                [
-                    ...results, 
-                    {
-                        key: `${operand1}_${operator}_${operand2}_${results.length}`, 
-                        question: `${operand1} ${operator} ${operand2} = `, 
-                        answerInput: parseInt(inputValue), 
-                        correctAnswer: answer, 
-                        answerCorrect: parseInt(inputValue)===answer
-                    }
-                ]
-            );
-        } else if(mode==="Practice" && answerValue !== ' ') {
+        if(answerValue !== ' ') {
             setResults(
                 [
                     ...results, 
@@ -217,14 +204,7 @@ export default function QuestionBlock({
                         {operand2}
                     </Text>
                     <Text style={[styles.questionBlock, styles.equals]}>=</Text>
-                    {mode === 'Practice' ? 
-                        <Text style={answerStyle}>{answerValue}</Text> : (
-                        <TextInput
-                            style={styles.inputAnswer} 
-                            value={inputValue} 
-                            onChangeText={(text) => handleTextInput(text)}/>
-                        )
-                    }
+                        <Text style={answerStyle}>{answerValue}</Text>
                 </View>
             </View>
             { mode === 'Practice' && answerValue !== " " && (
@@ -236,7 +216,7 @@ export default function QuestionBlock({
                 }}>{messageStatement}</Text>
             )}
             <View style={styles.section}>
-                {mode === 'Practice' ? (<>
+                <>
                     <View
                         style={{
                             flexDirection: "row",
@@ -269,7 +249,7 @@ export default function QuestionBlock({
                             disabled={answerValue !== " "}
                         />
                     </View>
-                </>) : null }
+                </>
                 { mode === 'Challenge' ? <StopWatch stop={stopTimer} saveTimerValue={setTimerValue}/> : null}
                 <View
                     style={{
