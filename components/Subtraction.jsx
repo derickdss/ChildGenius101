@@ -37,6 +37,7 @@ export default function Subtraction({ navigation, route }) {
                     setWrongAnswerCount={setWrongAnswerCount}
                     setResult={setResult}
                     setTimerValue={setTimerValue}
+                    timerValue={timerValue}
                 />
             ) : (
                 <View>
@@ -46,6 +47,7 @@ export default function Subtraction({ navigation, route }) {
                         reloadPage={reloadPage}
                         result={result}
                         resultTime={timerValue}
+                        countdownTime={countdownTime}
                     />
                 </View>
             )}

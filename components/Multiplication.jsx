@@ -38,6 +38,7 @@ export default function Multiplication({ navigation, route }) {
                     setWrongAnswerCount={setWrongAnswerCount}
                     setResult={setResult}
                     setTimerValue={setTimerValue}
+                    timerValue={timerValue}
                 />
             ) : (
                 <View>
@@ -47,6 +48,7 @@ export default function Multiplication({ navigation, route }) {
                         reloadPage={reloadPage}
                         result={result}
                         resultTime={timerValue}
+                        countdownTime={countdownTime}
                     />
                 </View>
             )}

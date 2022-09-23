@@ -38,6 +38,7 @@ export default function Division({ navigation, route }) {
                     setWrongAnswerCount={setWrongAnswerCount}
                     setResult={setResult}
                     setTimerValue={setTimerValue}
+                    timerValues={timerValue}
                 />
             ) : (
                 <View>
@@ -47,6 +48,7 @@ export default function Division({ navigation, route }) {
                         reloadPage={reloadPage}
                         result={result}
                         resultTime={timerValue}
+                        countdownTime={countdownTime}
                     />
                 </View>
             )}

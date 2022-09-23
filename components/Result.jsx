@@ -2,10 +2,11 @@ import react, {useState, useEffect} from "react";
 import { Text, Button, View, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const ResultStatement = ({ result, resultTime }) => {
+const ResultStatement = ({ result, countdownTime }) => {
     const correctAnswerCount = result.filter((res)=> res.answerCorrect).length;
     const wrongAnswerCount = result.length - correctAnswerCount;
     const [showText, setShowText] = useState(true);
+    const timePerQuestion = result.length ? (countdownTime/result.length).toFixed(2) : 0;
     useEffect(() => {
         // Change the state every second or the time given by User.
         const interval = setInterval(() => {
@@ -19,7 +20,7 @@ const ResultStatement = ({ result, resultTime }) => {
             <Text style={{fontSize:20, fontWeight: 'bold' }}>You Scored</Text>
             <Text style={{fontSize:20, fontWeight: 'bold' }}><Text style={{ color: "green" }}>{` ${correctAnswerCount} `}</Text>correct and </Text>
             <Text style={{fontSize:20, fontWeight: 'bold' }}><Text style={{ color: "red" }}>{` ${wrongAnswerCount} `}</Text>incorrect answers</Text>
-            <Text style={{fontSize:20, fontWeight: 'bold' }}>{showText && resultTime ? <Text style={{textAlign: 'center'}}>{`Time: ${resultTime}`}</Text> :<Text>         </Text>}</Text>
+            <Text style={{fontSize:20, fontWeight: 'bold' }}>{showText && result.length ? <Text style={{textAlign: 'center'}}>{`${timePerQuestion}sec/question`}</Text> :<Text>{'         '}</Text>}</Text>
         </View>
     );
 };
@@ -79,13 +80,13 @@ const Answers = ({result}) => {
         </View>
     )}
 
-const Result = ({ correctAnswerCount, wrongAnswerCount, reloadPage, result, resultTime }) => {
-    console.log('derd, result time', resultTime)
+const Result = ({ correctAnswerCount, wrongAnswerCount, reloadPage, result, countdownTime }) => {
+    console.log('derd, result time', countdownTime)
     return (
         <View style={{display:'flex', justifyContent: 'flex-start', marginTop: 250}}>
             <ResultStatement
                 result={result}
-                resultTime={resultTime}
+                countdownTime={countdownTime}
             />
             <ResultOptions reloadPage={reloadPage} />
             <Answers result={result}/>
