@@ -9,6 +9,7 @@ export default function Addition({ navigation, route }) {
     const [wrongAnswerCount, setWrongAnswerCount] = useState(0);
     const [result, setResult] = useState([])
     const [timerValue, setTimerValue] = useState();
+    const [countdownTime, setCountdowntime] = useState(60);
 
     const reloadPage = () => {
         setQuizComplete(false);
@@ -37,6 +38,7 @@ export default function Addition({ navigation, route }) {
                     setWrongAnswerCount={setWrongAnswerCount}
                     setResult={setResult}
                     setTimerValue={setTimerValue}
+                    timerValue={timerValue}
                 />
             ) : (
                 <View>
@@ -45,7 +47,7 @@ export default function Addition({ navigation, route }) {
                         wrongAnswerCount={wrongAnswerCount}
                         reloadPage={reloadPage}
                         result={result}
-                        resultTime={timerValue}
+                        countdownTime={countdownTime}
                     />
                 </View>
             )}
