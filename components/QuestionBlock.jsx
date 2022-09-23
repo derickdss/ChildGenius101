@@ -48,54 +48,54 @@ export default function QuestionBlock({
     const [operator, setOperator] = useState("");
     const [maxOperandValue, setMaxOperandValue] = useState(15);
     const maxOptionRandomValue = 5;
-    const numberOfQuestionPerExercise = 10;
+    const numberOfQuestionPerExercise = 1;
 
     const setNumpadValue = (answer) => {
-        if(answerSubString){
-            setAnswerSubString(`${answerSubString}${answer}`)
+        if (answerSubString) {
+            setAnswerSubString(`${answerSubString}${answer}`);
         } else {
-            setAnswerSubString(`${answer}`)
+            setAnswerSubString(`${answer}`);
         }
-    }
+    };
 
     const setNumpadSubStringToAnswerValue = () => {
         setAnswerValue(parseInt(answerSubString));
-        setTimeout(function() {
+        setTimeout(function () {
             setQuestionAndAnswers();
         }, 500);
-    }
+    };
 
     const setBackspaceNumpadValue = () => {
-        setAnswerSubString(`${answerSubString.substring(0,answerSubString.length - 1)}`)
-    }
+        if (answerSubString) {
+            setAnswerSubString(
+                `${answerSubString.substring(0, answerSubString.length - 1)}`
+            );
+        }
+    };
 
     const setQuestionAndAnswers = async () => {
-        if(answerValue !== ' ' && mode === 'Practice') {
-            setResults(
-                [
-                    ...results, 
-                    { 
-                        key: `${operand1}_${operator}_${operand2}_${results.length}`, 
-                        question: `${operand1} ${operator} ${operand2} = `,
-                        answerInput: answerValue, 
-                        correctAnswer: answer, 
-                        answerCorrect: answerValue===answer
-                    }
-                ]
-            );
-        } else if(answerSubString !== ' ' && mode === 'Challenge') {
-            setResults(
-                [
-                    ...results, 
-                    { 
-                        key: `${operand1}_${operator}_${operand2}_${results.length}`, 
-                        question: `${operand1} ${operator} ${operand2} = `,
-                        answerInput: parseInt(answerSubString), 
-                        correctAnswer: answer, 
-                        answerCorrect: parseInt(answerSubString)===answer
-                    }
-                ]
-            );
+        if (answerValue !== " " && mode === "Practice") {
+            setResults([
+                ...results,
+                {
+                    key: `${operand1}_${operator}_${operand2}_${results.length}`,
+                    question: `${operand1} ${operator} ${operand2} = `,
+                    answerInput: answerValue,
+                    correctAnswer: answer,
+                    answerCorrect: answerValue === answer,
+                },
+            ]);
+        } else if (answerSubString !== " " && mode === "Challenge") {
+            setResults([
+                ...results,
+                {
+                    key: `${operand1}_${operator}_${operand2}_${results.length}`,
+                    question: `${operand1} ${operator} ${operand2} = `,
+                    answerInput: parseInt(answerSubString),
+                    correctAnswer: answer,
+                    answerCorrect: parseInt(answerSubString) === answer,
+                },
+            ]);
         }
         setAnswerSubString();
         setAnswerHighlightStyle(null);
@@ -104,7 +104,7 @@ export default function QuestionBlock({
         }
         setQuestionNumber(questionNumber + 1);
         setAnswerValue(" ");
-        setInputValue(" ")
+        setInputValue(" ");
         setAnswerCorrect();
         let number1 = getRandomInt(1, maxOperandValue);
         let number2 = getRandomInt(1, maxOperandValue);
@@ -169,7 +169,7 @@ export default function QuestionBlock({
             ];
 
             answers = divisionAnswers;
-            setOperator("/");
+            setOperator("÷");
             setAnswer(number1 / number2);
         }
 
@@ -195,47 +195,57 @@ export default function QuestionBlock({
     }, []);
 
     useEffect(() => {
-        if (questionNumber > numberOfQuestionPerExercise && mode === 'Practice') {
+        if (
+            questionNumber > numberOfQuestionPerExercise &&
+            mode === "Practice"
+        ) {
             setStopTimer(true);
-            setResult(results)
+            setResult(results);
         }
     }, [questionNumber]);
 
     useEffect(() => {
-        if (mode === 'Challenge' && timerValue === '01:00s') {
+        console.log("derd, timer value", timerValue);
+        if (mode === "Challenge" && timerValue === "01:00s") {
             setStopTimer(true);
             setResult(results);
         }
-    }, [timerValue])
+    }, [timerValue]);
 
-    useEffect(()=>{
-        if(stopTimer) {
+    useEffect(() => {
+        if (stopTimer) {
             setQuizComplete(true);
         }
-    },[stopTimer])
+    }, [stopTimer]);
 
-    const handleTextInput = (text) =>{
-        const numberString = text.replace(/[^0-9]/ig, "");
+    const handleTextInput = (text) => {
+        const numberString = text.replace(/[^0-9]/gi, "");
         setInputValue(numberString);
-    }
-    
-    console.log('derd,results', results);
+    };
+
+    console.log("derd,results", results);
+    console.log("derd, qu block timer value", timerValue);
 
     return (
         <View>
             <View style={styles.section}>
                 <View style={{ display: "flex" }}>
                     <Text>
-                        Question {questionNumber}{mode === "Practice" && `/10`}
-                        {mode === "Practice" && <>
-                        [ Score :{" "}
-                        <Text style={{ color: "green" }}>
-                            {correctAnswerCount}
-                        </Text>{" "}
-                        /{" "}
-                        <Text style={{ color: "red" }}>{wrongAnswerCount}</Text>{" "}
-                        ]
-                        </>}
+                        Question {questionNumber}
+                        {mode === "Practice" && `/10`}
+                        {mode === "Practice" && (
+                            <>
+                                [ Score :{" "}
+                                <Text style={{ color: "green" }}>
+                                    {correctAnswerCount}
+                                </Text>{" "}
+                                /{" "}
+                                <Text style={{ color: "red" }}>
+                                    {wrongAnswerCount}
+                                </Text>{" "}
+                                ]
+                            </>
+                        )}
                     </Text>
                 </View>
                 <View style={{ display: "flex", flexDirection: "row" }}>
@@ -249,44 +259,47 @@ export default function QuestionBlock({
                         {operand2}
                     </Text>
                     <Text style={[styles.questionBlock, styles.equals]}>=</Text>
-                        <Text style={answerStyle}>{ mode === 'Challenge' ? answerSubString : answerValue }</Text>
+                    <Text style={answerStyle}>
+                        {mode === "Challenge" ? answerSubString : answerValue}
+                    </Text>
                 </View>
             </View>
-            { mode === 'Practice' && answerValue !== " " && (
-                <Text style={{
-                    fontSize: 20,
-                    fontWeight: 'bold', 
-                    textAlign: 'center',
-                    color: 'blue'
-                }}>{messageStatement}</Text>
+            {mode === "Practice" && answerValue !== " " && (
+                <Text
+                    style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        color: "blue",
+                    }}
+                >
+                    {messageStatement}
+                </Text>
             )}
             <View style={styles.section}>
-                {
-                    mode === 'Challenge' ? 
-                        <NumberPad 
-                            answerValue={answerSubString} 
-                            setNumpadValue={setNumpadValue} 
-                            setAnswerValue={setNumpadSubStringToAnswerValue}
-                            backspaceNumpadValue={setBackspaceNumpadValue}
-                        /> :
-                        <AnswerButtons 
-                            rows={2} 
-                            values={answerOptions} 
-                            answerValue={answerValue} 
-                            setAnswerValue={setAnswerValue} 
-                            disabled={answerValue !== " "}
-                        />
-                }
-                { 
-                    mode === 'Challenge' ? 
-                        <StopWatch 
-                            stop={stopTimer} 
-                            saveTimerValue={setTimerValue}
-                        /> : 
-                    null
-                }
-                { 
-                    mode === 'Challenge' ? 
+                {mode === "Challenge" ? (
+                    <NumberPad
+                        answerValue={answerSubString}
+                        setNumpadValue={setNumpadValue}
+                        setAnswerValue={setNumpadSubStringToAnswerValue}
+                        backspaceNumpadValue={setBackspaceNumpadValue}
+                    />
+                ) : (
+                    <AnswerButtons
+                        rows={2}
+                        values={answerOptions}
+                        answerValue={answerValue}
+                        setAnswerValue={setAnswerValue}
+                        disabled={answerValue !== " "}
+                    />
+                )}
+                {mode === "Challenge" ? (
+                    <StopWatch
+                        stop={stopTimer}
+                        saveTimerValue={setTimerValue}
+                    />
+                ) : null}
+                {mode === "Practice" ? (
                     <View
                         style={{
                             margin: 10,
@@ -300,8 +313,8 @@ export default function QuestionBlock({
                             onPress={() => setQuestionAndAnswers()}
                             disabled={answerValue === " " && inputValue === " "}
                         />
-                    </View>: null
-                }
+                    </View>
+                ) : null}
             </View>
             <StatusBar style="auto" />
         </View>

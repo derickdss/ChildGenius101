@@ -43,8 +43,7 @@ export default function Addition({ navigation, route }) {
             ) : (
                 <View>
                     <Result
-                        correctAnswerCount={correctAnswerCount}
-                        wrongAnswerCount={wrongAnswerCount}
+                        mode={route?.params?.mode}
                         reloadPage={reloadPage}
                         result={result}
                         countdownTime={countdownTime}
