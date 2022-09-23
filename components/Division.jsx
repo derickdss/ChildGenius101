@@ -11,8 +11,6 @@ export default function Division({ navigation, route }) {
     const [timerValue, setTimerValue] = useState();
     const [countdownTime, setCountdowntime] = useState(60);
 
-    console.log("derd, division timerValue", timerValue);
-
     const reloadPage = () => {
         setQuizComplete(false);
         setCorrectAnswerCount(0);

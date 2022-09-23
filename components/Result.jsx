@@ -75,8 +75,6 @@ const ResultOptions = ({ reloadPage }) => {
 };
 
 const Answers = ({ result }) => {
-    console.log("derd, results", result);
-
     result.length ? (
         <View style={{ paddingTop: 25, display: "flex", paddingLeft: 20 }}>
             <Text style={{ fontWeight: "bold" }}>Answers:</Text>

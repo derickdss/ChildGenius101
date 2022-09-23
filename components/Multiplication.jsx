@@ -11,8 +11,6 @@ export default function Multiplication({ navigation, route }) {
     const [timerValue, setTimerValue] = useState();
     const [countdownTime, setCountdowntime] = useState(60);
 
-    console.log("derd, multiplication timerValue", timerValue);
-
     const reloadPage = () => {
         setQuizComplete(false);
         setCorrectAnswerCount(0);

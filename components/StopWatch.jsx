@@ -12,7 +12,6 @@ const StopWatch = ({autostart=true, stop=false, saveTimerValue}) => {
 
     useEffect(()=> {
         let interval = null;
-        console.log("derd, stop watch stop", stop);
 
         if(stop) {
             saveTimerValue(`${getMinutes()}:${getSeconds()}s`);

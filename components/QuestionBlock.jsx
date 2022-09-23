@@ -205,7 +205,6 @@ export default function QuestionBlock({
     }, [questionNumber]);
 
     useEffect(() => {
-        console.log("derd, timer value", timerValue);
         if (mode === "Challenge" && timerValue === "01:00s") {
             setStopTimer(true);
             setResult(results);
@@ -222,9 +221,6 @@ export default function QuestionBlock({
         const numberString = text.replace(/[^0-9]/gi, "");
         setInputValue(numberString);
     };
-
-    console.log("derd,results", results);
-    console.log("derd, qu block timer value", timerValue);
 
     return (
         <View>
