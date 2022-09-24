@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'rgb(57, 61, 241)',
         // margin: 10,
-        padding: 20,
+        padding: 15,
         paddingBottom: 5
     },
     inputAnswer: {
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         //// borderColor: 'white',
         //// borderWidth: 1,
-        padding: 75
+        padding: 75,
     },
     answers: {
         margin: 4,
