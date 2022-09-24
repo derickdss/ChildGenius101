@@ -20,7 +20,7 @@ const AnswerButtons = ({ rows, values, setAnswerValue, answerValue }) => {
                         <Buttons
                             answer={`${column}`}
                             setAnswerValue={setAnswerValue}
-                            disabled={answerValue !== " "}
+                            disabled={answerValue !== "  "}
                             key={`${column}_${index}`}
                         />
                     ))}

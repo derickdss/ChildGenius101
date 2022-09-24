@@ -22,8 +22,8 @@ export default function QuestionBlock({
     timerValue,
 }) {
     const [answerCorrect, setAnswerCorrect] = useState();
-    const [answerValue, setAnswerValue] = useState(" ");
-    const [inputValue, setInputValue] = useState(" ");
+    const [answerValue, setAnswerValue] = useState("  ");
+    const [inputValue, setInputValue] = useState("  ");
     const [results, setResults] = useState([]);
     const [answerHighlightStyle, setAnswerHighlightStyle] = useState(null);
     const [stopTimer, setStopTimer] = useState(false);
@@ -33,7 +33,7 @@ export default function QuestionBlock({
         answerHighlightStyle,
     ];
     const messageStatement =
-        answerValue !== " "
+        answerValue !== "  "
             ? answerCorrect
                 ? "Correct answer!"
                 : "Incorrect answer"
@@ -74,7 +74,7 @@ export default function QuestionBlock({
     };
 
     const setQuestionAndAnswers = async () => {
-        if (answerValue !== " " && mode === "Practice") {
+        if (answerValue !== "  " && mode === "Practice") {
             setResults([
                 ...results,
                 {
@@ -103,8 +103,8 @@ export default function QuestionBlock({
             setMaxOperandValue(12);
         }
         setQuestionNumber(questionNumber + 1);
-        setAnswerValue(" ");
-        setInputValue(" ");
+        setAnswerValue("  ");
+        setInputValue("  ");
         setAnswerCorrect();
         let number1 = getRandomInt(1, maxOperandValue);
         let number2 = getRandomInt(1, maxOperandValue);
@@ -177,7 +177,7 @@ export default function QuestionBlock({
     };
 
     useEffect(() => {
-        if (answerValue === " ") {
+        if (answerValue === "  ") {
             return;
         } else if (answerValue === answer) {
             setAnswerHighlightStyle(styles.answerCorrect);
@@ -244,7 +244,13 @@ export default function QuestionBlock({
                         )}
                     </Text>
                 </View>
-                <View style={{ display: "flex", flexDirection: "row" }}>
+                <View
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginLeft: 13,
+                    }}
+                >
                     <Text style={[styles.questionBlock, styles.operand]}>
                         {operand1}
                     </Text>
@@ -260,7 +266,7 @@ export default function QuestionBlock({
                     </Text>
                 </View>
             </View>
-            {mode === "Practice" && answerValue !== " " ? (
+            {mode === "Practice" && answerValue !== "  " ? (
                 <Text
                     style={{
                         fontSize: 20,
@@ -317,7 +323,9 @@ export default function QuestionBlock({
                             style={{}}
                             title={"Next"}
                             onPress={() => setQuestionAndAnswers()}
-                            disabled={answerValue === " " && inputValue === " "}
+                            disabled={
+                                answerValue === "  " && inputValue === "  "
+                            }
                         />
                     </View>
                 ) : null}
