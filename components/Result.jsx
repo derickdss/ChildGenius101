@@ -1,25 +1,51 @@
-import react, {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { Text, Button, View, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const ResultStatement = ({ result, resultTime }) => {
-    const correctAnswerCount = result.filter((res)=> res.answerCorrect).length;
+const ResultStatement = ({ mode, result, countdownTime }) => {
+    const correctAnswerCount = result.filter((res) => res.answerCorrect).length;
     const wrongAnswerCount = result.length - correctAnswerCount;
     const [showText, setShowText] = useState(true);
+    const timePerQuestion =
+        result.length && mode === "Challenge"
+            ? (countdownTime / result.length).toFixed(2)
+            : 0;
     useEffect(() => {
         // Change the state every second or the time given by User.
         const interval = setInterval(() => {
-          setShowText((showText) => !showText);
+            setShowText((showText) => !showText);
         }, 500);
         return () => clearInterval(interval);
-      }, []);
-    
+    }, []);
+
     return (
-        <View style={{display: 'flex', flexDirection:'column', alignItems: 'center'}}>
-            <Text style={{fontSize:20, fontWeight: 'bold' }}>You Scored</Text>
-            <Text style={{fontSize:20, fontWeight: 'bold' }}><Text style={{ color: "green" }}>{` ${correctAnswerCount} `}</Text>correct and </Text>
-            <Text style={{fontSize:20, fontWeight: 'bold' }}><Text style={{ color: "red" }}>{` ${wrongAnswerCount} `}</Text>incorrect answers</Text>
-            <Text style={{fontSize:20, fontWeight: 'bold' }}>{showText && resultTime ? <Text style={{textAlign: 'center'}}>{`Time: ${resultTime}`}</Text> :<Text>         </Text>}</Text>
+        <View
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+            }}
+        >
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>You Scored</Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                <Text
+                    style={{ color: "green" }}
+                >{` ${correctAnswerCount} `}</Text>
+                correct and{" "}
+            </Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                <Text style={{ color: "red" }}>{` ${wrongAnswerCount} `}</Text>
+                incorrect answers
+            </Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                {showText && result.length && mode === "Challenge" ? (
+                    <Text
+                        style={{ textAlign: "center" }}
+                    >{`${timePerQuestion}sec/question`}</Text>
+                ) : (
+                    <Text>{"         "}</Text>
+                )}
+            </Text>
         </View>
     );
 };
@@ -35,7 +61,7 @@ const ResultOptions = ({ reloadPage }) => {
                 margin: 10,
             }}
         >
-            <View style={{  marginLeft: 10, marginRight: 5, width: 80 }}>
+            <View style={{ marginLeft: 10, marginRight: 5, width: 80 }}>
                 <Button title="Retake" onPress={reloadPage} />
             </View>
             <View style={{ marginLeft: 10, marginRight: 5, width: 80 }}>
@@ -48,49 +74,57 @@ const ResultOptions = ({ reloadPage }) => {
     );
 };
 
-const Answers = ({result}) => {
-    return(
-        <View style={{ paddingTop:25, display: 'flex', paddingLeft: 20}}>
-            <Text style={{fontWeight: 'bold'}}>Answers:</Text>
+const Answers = ({ result }) => {
+    result.length ? (
+        <View style={{ paddingTop: 25, display: "flex", paddingLeft: 20 }}>
+            <Text style={{ fontWeight: "bold" }}>Answers:</Text>
             <View>
-            <FlatList 
-                data={result}
-                renderItem={({item, index}) => 
-                    <View>
-                        <Text>
-                            {item.question}
-                        <Text 
-                            style={{
-                                color: item.answerInput === item.correctAnswer ? 'green' : 'red', 
-                            }}>
-                                {item.answerInput}
-                                { item.answerInput !== item.correctAnswer ?
-                                    <Text style={{color:  'green'}}>
-                                        {` => ${item.correctAnswer}`}
-                                    </Text>:
-                                    null
-                                }
-                        </Text>
-                        
-                        </Text>
-                    </View>
-                } />                
+                <FlatList
+                    data={result}
+                    renderItem={({ item, index }) => (
+                        <View>
+                            <Text>
+                                {item.question}
+                                <Text
+                                    style={{
+                                        color:
+                                            item.answerInput ===
+                                            item.correctAnswer
+                                                ? "green"
+                                                : "red",
+                                    }}
+                                >
+                                    {item.answerInput}
+                                    {item.answerInput !== item.correctAnswer ? (
+                                        <Text style={{ color: "green" }}>
+                                            {` => ${item.correctAnswer}`}
+                                        </Text>
+                                    ) : null}
+                                </Text>
+                            </Text>
+                        </View>
+                    )}
+                />
             </View>
         </View>
-    )}
-
-const Result = ({ correctAnswerCount, wrongAnswerCount, reloadPage, result, resultTime }) => {
-    console.log('derd, result time', resultTime)
-    return (
-        <View style={{display:'flex', justifyContent: 'flex-start', marginTop: 250}}>
-            <ResultStatement
-                result={result}
-                resultTime={resultTime}
-            />
-            <ResultOptions reloadPage={reloadPage} />
-            <Answers result={result}/>
-        </View>
-    );
+    ) : null;
 };
+
+const Result = ({ mode, reloadPage, result, countdownTime }) => (
+    <View
+        style={{
+            display: "flex",
+            justifyContent: "flex-start",
+        }}
+    >
+        <ResultStatement
+            result={result}
+            countdownTime={countdownTime}
+            mode={mode}
+        />
+        <ResultOptions reloadPage={reloadPage} />
+        <Answers result={result} />
+    </View>
+);
 
 export default Result;

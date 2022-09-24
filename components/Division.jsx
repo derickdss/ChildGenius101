@@ -4,12 +4,12 @@ import QuestionBlock from "./QuestionBlock";
 import Result from "./Result";
 
 export default function Division({ navigation, route }) {
-    const [buttonText, setButtonText] = useState("Click Me");
     const [quizComplete, setQuizComplete] = useState(false);
     const [correctAnswerCount, setCorrectAnswerCount] = useState(0);
     const [wrongAnswerCount, setWrongAnswerCount] = useState(0);
     const [result, setResult] = useState([]);
     const [timerValue, setTimerValue] = useState();
+    const [countdownTime, setCountdowntime] = useState(60);
 
     const reloadPage = () => {
         setQuizComplete(false);
@@ -38,15 +38,15 @@ export default function Division({ navigation, route }) {
                     setWrongAnswerCount={setWrongAnswerCount}
                     setResult={setResult}
                     setTimerValue={setTimerValue}
+                    timerValue={timerValue}
                 />
             ) : (
                 <View>
                     <Result
-                        correctAnswerCount={correctAnswerCount}
-                        wrongAnswerCount={wrongAnswerCount}
+                        mode={route?.params?.mode}
                         reloadPage={reloadPage}
                         result={result}
-                        resultTime={timerValue}
+                        countdownTime={countdownTime}
                     />
                 </View>
             )}

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { StatusBar } from "expo-status-bar";
 import { View } from "react-native";
 import QuestionBlock from "./QuestionBlock";
 import Result from "./Result";
@@ -10,6 +9,7 @@ export default function Multiplication({ navigation, route }) {
     const [wrongAnswerCount, setWrongAnswerCount] = useState(0);
     const [result, setResult] = useState([]);
     const [timerValue, setTimerValue] = useState();
+    const [countdownTime, setCountdowntime] = useState(60);
 
     const reloadPage = () => {
         setQuizComplete(false);
@@ -38,15 +38,15 @@ export default function Multiplication({ navigation, route }) {
                     setWrongAnswerCount={setWrongAnswerCount}
                     setResult={setResult}
                     setTimerValue={setTimerValue}
+                    timerValue={timerValue}
                 />
             ) : (
                 <View>
                     <Result
-                        correctAnswerCount={correctAnswerCount}
-                        wrongAnswerCount={wrongAnswerCount}
+                        mode={route?.params?.mode}
                         reloadPage={reloadPage}
                         result={result}
-                        resultTime={timerValue}
+                        countdownTime={countdownTime}
                     />
                 </View>
             )}
