@@ -15,13 +15,15 @@ export default function QuestionBlock({
     setCorrectAnswerCount,
     wrongAnswerCount,
     setWrongAnswerCount,
-    setResult
+    setResult,
+    setTimerValue
 }) {
     const [answerCorrect, setAnswerCorrect] = useState();
     const [answerValue, setAnswerValue] = useState(" ");
     const [inputValue, setInputValue]  = useState(" ");
     const [results, setResults] = useState([])
     const [answerHighlightStyle, setAnswerHighlightStyle] = useState(null);
+    const [stopTimer, setStopTimer]= useState(false);
     let answerStyle = [
         styles.questionBlock,
         styles.answer,
@@ -42,23 +44,10 @@ export default function QuestionBlock({
     const [operator, setOperator] = useState("");
     const [maxOperandValue, setMaxOperandValue] = useState(15);
     const maxOptionRandomValue = 5;
-    const numberOfQuestionPerExercise = 10;
+    const numberOfQuestionPerExercise = 1;
 
     const setQuestionAndAnswers = async () => {
-        if(mode==="Challenge" && inputValue !== ' ') {
-            setResults(
-                [
-                    ...results, 
-                    {
-                        key: `${operand1}_${operator}_${operand2}_${results.length}`, 
-                        question: `${operand1} ${operator} ${operand2} = `, 
-                        answerInput: parseInt(inputValue), 
-                        correctAnswer: answer, 
-                        answerCorrect: parseInt(inputValue)===answer
-                    }
-                ]
-            );
-        } else if(mode==="Practice" && answerValue !== ' ') {
+        if(answerValue !== ' ') {
             setResults(
                 [
                     ...results, 
@@ -171,10 +160,16 @@ export default function QuestionBlock({
 
     useEffect(() => {
         if (questionNumber > numberOfQuestionPerExercise) {
-            setQuizComplete(true);
+            setStopTimer(true);
             setResult(results)
         }
     }, [questionNumber]);
+
+    useEffect(()=>{
+        if(stopTimer) {
+            setQuizComplete(true);
+        }
+    },[stopTimer])
 
     const handleTextInput = (text) =>{
         const numberString = text.replace(/[^0-9]/ig, "");
@@ -209,15 +204,7 @@ export default function QuestionBlock({
                         {operand2}
                     </Text>
                     <Text style={[styles.questionBlock, styles.equals]}>=</Text>
-                    {mode === 'Practice' ? 
-                        <Text style={answerStyle}>{answerValue}</Text> : (
-                        <TextInput
-                            style={styles.inputAnswer} 
-                            value={inputValue} 
-                            // onChangeText={(text) => setInputValue(parseInt(Math.trunc(text.replace(/[^.0-9]/ig, ""))))}/>
-                            onChangeText={(text) => handleTextInput(text)}/>
-                        )
-                    }
+                        <Text style={answerStyle}>{answerValue}</Text>
                 </View>
             </View>
             { mode === 'Practice' && answerValue !== " " && (
@@ -229,7 +216,7 @@ export default function QuestionBlock({
                 }}>{messageStatement}</Text>
             )}
             <View style={styles.section}>
-                {mode === 'Practice' ? (<>
+                <>
                     <View
                         style={{
                             flexDirection: "row",
@@ -262,8 +249,8 @@ export default function QuestionBlock({
                             disabled={answerValue !== " "}
                         />
                     </View>
-                </>) : null }
-                {/* <StopWatch showControlButtons={false}/>} */}
+                </>
+                { mode === 'Challenge' ? <StopWatch stop={stopTimer} saveTimerValue={setTimerValue}/> : null}
                 <View
                     style={{
                         margin: 10,

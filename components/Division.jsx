@@ -8,7 +8,8 @@ export default function Division({ navigation, route }) {
     const [quizComplete, setQuizComplete] = useState(false);
     const [correctAnswerCount, setCorrectAnswerCount] = useState(0);
     const [wrongAnswerCount, setWrongAnswerCount] = useState(0);
-    const [result, setResult] = useState([])
+    const [result, setResult] = useState([]);
+    const [timerValue, setTimerValue] = useState();
 
     const reloadPage = () => {
         setQuizComplete(false);
@@ -36,6 +37,7 @@ export default function Division({ navigation, route }) {
                     wrongAnswerCount={wrongAnswerCount}
                     setWrongAnswerCount={setWrongAnswerCount}
                     setResult={setResult}
+                    setTimerValue={setTimerValue}
                 />
             ) : (
                 <View>
@@ -44,6 +46,7 @@ export default function Division({ navigation, route }) {
                         wrongAnswerCount={wrongAnswerCount}
                         reloadPage={reloadPage}
                         result={result}
+                        resultTime={timerValue}
                     />
                 </View>
             )}
