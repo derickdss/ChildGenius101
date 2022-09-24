@@ -74,41 +74,44 @@ const ResultOptions = ({ reloadPage }) => {
     );
 };
 
-const Answers = ({ result }) => {
-    result.length ? (
-        <View style={{ paddingTop: 25, display: "flex", paddingLeft: 20 }}>
-            <Text style={{ fontWeight: "bold" }}>Answers:</Text>
-            <View>
-                <FlatList
-                    data={result}
-                    renderItem={({ item, index }) => (
-                        <View>
-                            <Text>
-                                {item.question}
-                                <Text
-                                    style={{
-                                        color:
-                                            item.answerInput ===
-                                            item.correctAnswer
-                                                ? "green"
-                                                : "red",
-                                    }}
-                                >
-                                    {item.answerInput}
-                                    {item.answerInput !== item.correctAnswer ? (
-                                        <Text style={{ color: "green" }}>
-                                            {` => ${item.correctAnswer}`}
-                                        </Text>
-                                    ) : null}
+const Answers = ({ result }) => (
+    <View>
+        {result.length ? (
+            <View style={{ paddingTop: 25, display: "flex", paddingLeft: 20 }}>
+                <Text style={{ fontWeight: "bold" }}>Answers:</Text>
+                <View>
+                    <FlatList
+                        data={result}
+                        renderItem={({ item, index }) => (
+                            <View>
+                                <Text>
+                                    {item.question}
+                                    <Text
+                                        style={{
+                                            color:
+                                                item.answerInput ===
+                                                item.correctAnswer
+                                                    ? "green"
+                                                    : "red",
+                                        }}
+                                    >
+                                        {item.answerInput}
+                                        {item.answerInput !==
+                                        item.correctAnswer ? (
+                                            <Text style={{ color: "green" }}>
+                                                {` => ${item.correctAnswer}`}
+                                            </Text>
+                                        ) : null}
+                                    </Text>
                                 </Text>
-                            </Text>
-                        </View>
-                    )}
-                />
+                            </View>
+                        )}
+                    />
+                </View>
             </View>
-        </View>
-    ) : null;
-};
+        ) : null}
+    </View>
+);
 
 const Result = ({ mode, reloadPage, result, countdownTime }) => (
     <View
