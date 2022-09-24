@@ -19,21 +19,21 @@ export default function QuestionBlock({
     setWrongAnswerCount,
     setResult,
     setTimerValue,
-    timerValue
+    timerValue,
 }) {
     const [answerCorrect, setAnswerCorrect] = useState();
     const [answerValue, setAnswerValue] = useState(" ");
-    const [inputValue, setInputValue]  = useState(" ");
-    const [results, setResults] = useState([])
+    const [inputValue, setInputValue] = useState(" ");
+    const [results, setResults] = useState([]);
     const [answerHighlightStyle, setAnswerHighlightStyle] = useState(null);
-    const [stopTimer, setStopTimer]= useState(false);
+    const [stopTimer, setStopTimer] = useState(false);
     let answerStyle = [
         styles.questionBlock,
         styles.answer,
         answerHighlightStyle,
     ];
     const messageStatement =
-        answerValue !== "?"
+        answerValue !== " "
             ? answerCorrect
                 ? "Correct answer!"
                 : "Incorrect answer"
@@ -43,7 +43,7 @@ export default function QuestionBlock({
     const [answer, setAnswer] = useState();
     const [answerOptions, setAnswerOptions] = useState([]);
     const [questionNumber, setQuestionNumber] = useState(0);
-    const [answerSubString, setAnswerSubString] = useState(" ")
+    const [answerSubString, setAnswerSubString] = useState(" ");
 
     const [operator, setOperator] = useState("");
     const [maxOperandValue, setMaxOperandValue] = useState(15);
@@ -260,7 +260,7 @@ export default function QuestionBlock({
                     </Text>
                 </View>
             </View>
-            {mode === "Practice" && answerValue !== " " && (
+            {mode === "Practice" && answerValue !== " " ? (
                 <Text
                     style={{
                         fontSize: 20,
@@ -270,6 +270,17 @@ export default function QuestionBlock({
                     }}
                 >
                     {messageStatement}
+                </Text>
+            ) : (
+                <Text
+                    style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        color: "blue",
+                    }}
+                >
+                    {" "}
                 </Text>
             )}
             <View style={styles.section}>
@@ -282,11 +293,10 @@ export default function QuestionBlock({
                     />
                 ) : (
                     <AnswerButtons
-                        rows={2}
                         values={answerOptions}
                         answerValue={answerValue}
                         setAnswerValue={setAnswerValue}
-                        disabled={answerValue !== " "}
+                        rows={2}
                     />
                 )}
                 {mode === "Challenge" ? (
