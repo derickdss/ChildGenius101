@@ -117,7 +117,8 @@ const Result = ({ mode, reloadPage, result, countdownTime }) => (
     <View
         style={{
             display: "flex",
-            justifyContent: "flex-start",
+            justifyContent: "center",
+            marginTop: -75,
         }}
     >
         <ResultStatement
