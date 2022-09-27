@@ -11,6 +11,8 @@ export default function Addition({ navigation, route }) {
     const [timerValue, setTimerValue] = useState();
     const [countdownTime, setCountdowntime] = useState(60);
 
+    console.log("route", route);
+
     const reloadPage = () => {
         setQuizComplete(false);
         setCorrectAnswerCount(0);
@@ -31,6 +33,7 @@ export default function Addition({ navigation, route }) {
                 <QuestionBlock
                     operation={"addition"}
                     mode={route?.params?.mode}
+                    math={route?.params?.mathLevel}
                     setQuizComplete={setQuizComplete}
                     correctAnswerCount={correctAnswerCount}
                     setCorrectAnswerCount={setCorrectAnswerCount}

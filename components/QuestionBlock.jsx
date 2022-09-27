@@ -12,6 +12,7 @@ import NumberPad from "./NumberPad";
 export default function QuestionBlock({
     operation,
     mode,
+    mathLevel,
     setQuizComplete,
     correctAnswerCount,
     setCorrectAnswerCount,
@@ -48,7 +49,7 @@ export default function QuestionBlock({
     const [operator, setOperator] = useState("");
     const [maxOperandValue, setMaxOperandValue] = useState(15);
     const maxOptionRandomValue = 5;
-    const numberOfQuestionPerExercise = 10;
+    const numberOfQuestionPerExercise = 1;
 
     const setNumpadValue = (answer) => {
         if (answerSubString) {

@@ -68,6 +68,17 @@ const styles = StyleSheet.create({
         margin: 4,
         width: 150
     },
+
+    // button > {
+    //     &::before {
+    //         color: ${(props) => props.theme?.primaryColor} !important;
+    //     }
+    // }
+
+    touchableOpacityButton: {
+        // justifyContent: 'center',
+        alignItems: 'center',
+    },
 })
 
 export default styles;
