@@ -77,7 +77,7 @@ export default function PracticeChallenge({ navigation, route }) {
                                     key={`${index}_${category.category}_${category.minLevel}`}
                                     title={`${category.category}`}
                                     style={{
-                                        marginLeft: 5,
+                                        marginLeft: index !== 0 ? 5 : 0,
                                         width: category.textWidth,
                                         height: 20,
                                         justifyContent: "center",
