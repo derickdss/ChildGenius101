@@ -3,7 +3,7 @@ import { View, Button, Text } from "react-native";
 import TouchableOpacityButton from "./TouchableOpacityButton";
 
 export default function PracticeChallenge({ navigation, route }) {
-    const [mathLevel, setMathLevel] = useState(2);
+    const [mathLevel, setMathLevel] = useState(4);
     const levelCategories = [
         {
             category: "Easy",
@@ -104,7 +104,7 @@ export default function PracticeChallenge({ navigation, route }) {
                                 title={level}
                                 mathLevel={mathLevel}
                                 onPress={() =>
-                                    level > 2 ? setMathLevel(level) : null
+                                    level > 4 ? setMathLevel(level) : null
                                 }
                                 style={{
                                     width: 25,
