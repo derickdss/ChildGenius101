@@ -29,19 +29,14 @@ export default function PracticeChallenge({ navigation, route }) {
         /*{ category: "Epic", maxLeveL: 15, minLevel: 13}*/
     ];
     const levels = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 /*, 13, 14, 15*/];
+    const easyMaxLevel = levelCategories[0].maxLevel;
 
     const categorySwitcher = (category) => {
         const catLevel = levelCategories.findIndex(
             (cat) => cat.category === category
         );
-        console.log(
-            "derd, cat finder",
-            levelCategories.findIndex((cat) => cat.category === category)
-        );
         setMathLevel(levelCategories[catLevel][`maxLevel`]);
     };
-
-    console.log("derd, minLevel", levelCategories[0].minLevel);
 
     return (
         <View
@@ -104,7 +99,9 @@ export default function PracticeChallenge({ navigation, route }) {
                                 title={level}
                                 mathLevel={mathLevel}
                                 onPress={() =>
-                                    level > 4 ? setMathLevel(level) : null
+                                    level <= 4
+                                        ? setMathLevel(easyMaxLevel)
+                                        : setMathLevel(level)
                                 }
                                 style={{
                                     width: 25,

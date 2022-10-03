@@ -8,6 +8,7 @@ import Buttons from "./Buttons";
 import StopWatch from "./StopWatch";
 import AnswerButtons from "./AnswerButtons";
 import NumberPad from "./NumberPad";
+import { getAnswers } from "./Answers";
 
 export default function QuestionBlock({
     operation,
@@ -28,6 +29,7 @@ export default function QuestionBlock({
     const [results, setResults] = useState([]);
     const [answerHighlightStyle, setAnswerHighlightStyle] = useState(null);
     const [stopTimer, setStopTimer] = useState(false);
+    const [previousQuestion, setPreviousQuestion] = useState("");
     let answerStyle = [
         styles.questionBlock,
         styles.answer,
@@ -47,9 +49,9 @@ export default function QuestionBlock({
     const [answerSubString, setAnswerSubString] = useState(" ");
 
     const [operator, setOperator] = useState("");
-    const [maxOperandValue, setMaxOperandValue] = useState(15);
+    const [maxOperandValue, setMaxOperandValue] = useState(mathLevel);
     const maxOptionRandomValue = 5;
-    const numberOfQuestionPerExercise = 1;
+    const numberOfQuestionPerExercise = 10;
 
     const setNumpadValue = (answer) => {
         if (answerSubString) {
@@ -100,80 +102,58 @@ export default function QuestionBlock({
         }
         setAnswerSubString();
         setAnswerHighlightStyle(null);
-        if (operation === "multiplication" || operation === "division") {
-            setMaxOperandValue(12);
-        }
         setQuestionNumber(questionNumber + 1);
         setAnswerValue("  ");
         setInputValue("  ");
         setAnswerCorrect();
-        let number1 = getRandomInt(1, maxOperandValue);
-        let number2 = getRandomInt(1, maxOperandValue);
+        let numberOne = getRandomInt(1, maxOperandValue);
+        let numberTwo = getRandomInt(1, maxOperandValue);
+        const numberOneTwoCombination = `${numberOne}${numberTwo}`;
+        while (numberOneTwoCombination === previousQuestion) {
+            numberOne = getRandomInt(1, maxOperandValue);
+            numberTwo = getRandomInt(1, maxOperandValue);
+        }
 
         if (operation === "division") {
-            let result = number1 * number2;
-            let temp = number1;
-            number1 = result;
+            let result = numberOne * numberTwo;
+            let temp = numberOne;
+            numberOne = result;
             setAnswer(temp);
         }
 
-        setOperand1(number1);
-        setOperand2(number2);
-        const randomNumberOne = getRandomInt(1, maxOperandValue - 6);
-        const randomNumberTwo = getRandomInt(5, maxOperandValue);
-        const randomNumberThree = getRandomInt(1, maxOperandValue - 5);
+        setOperand1(numberOne);
+        setOperand2(numberTwo);
 
         let answers = [];
         if (operation === "addition") {
-            const additionAnswers = [
-                number1 + number2,
-                number1 + number2 + randomNumberOne,
-                number1 + number2 + randomNumberTwo,
-                Math.abs(number1 + number2 - randomNumberThree),
-            ];
+            const additionAnswers = getAnswers(numberOne, "+", numberTwo);
             answers = additionAnswers;
             setOperator("+");
-            setAnswer(number1 + number2);
+            setAnswer(numberOne + numberTwo);
         } else if (operation === "subtraction") {
-            if (number1 - number2 < 0) {
-                let temp = number1;
-                number1 = number2;
-                number2 = temp;
-                setOperand1(number1);
-                setOperand2(number2);
+            if (numberOne - numberTwo < 0) {
+                let temp = numberOne;
+                numberOne = numberTwo;
+                numberTwo = temp;
+                setOperand1(numberOne);
+                setOperand2(numberTwo);
             }
-            const subtractionAnswers = [
-                number1 - number2,
-                number1 - number2 + randomNumberOne,
-                number1 - number2 + randomNumberTwo,
-                Math.abs(number1 + number2 - randomNumberThree),
-            ];
+            const subtractionAnswers = getAnswers(numberOne, "-", numberTwo);
             answers = subtractionAnswers;
             setOperator("-");
-            setAnswer(number1 - number2);
+            setAnswer(numberOne - numberTwo);
         } else if (operation === "multiplication") {
-            const multiplicationAnswers = [
-                number1 * number2,
-                number1 * number2 + randomNumberOne,
-                Math.abs(number1 * number2 - randomNumberTwo),
-                Math.abs(number1 * number2 - randomNumberThree),
-            ];
+            const multiplicationAnswers = getAnswers(numberOne, "*", numberTwo);
             answers = multiplicationAnswers;
             setOperator("x");
-            setAnswer(number1 * number2);
+            setAnswer(numberOne * numberTwo);
         } else if (operation === "division") {
-            const divisionAnswers = [
-                number1 / number2,
-                Math.ceil(number1 / number2 + randomNumberOne),
-                Math.abs(Math.ceil(number1 / number2 - randomNumberTwo)),
-                Math.abs(Math.ceil(number1 / number2 - randomNumberThree)),
-            ];
-
+            const divisionAnswers = getAnswers(numberOne, "/", numberTwo);
             answers = divisionAnswers;
             setOperator("÷");
-            setAnswer(number1 / number2);
+            setAnswer(numberOne / numberTwo);
         }
-
+        setPreviousQuestion(`${numberOne}${numberTwo}`);
         setAnswerOptions(shuffleArray(answers));
     };
 
