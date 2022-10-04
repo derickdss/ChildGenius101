@@ -31,6 +31,7 @@ export default function Subtraction({ navigation, route }) {
                 <QuestionBlock
                     operation={"subtraction"}
                     mode={route.params.mode}
+                    mathLevel={route?.params?.mathLevel}
                     setQuizComplete={setQuizComplete}
                     correctAnswerCount={correctAnswerCount}
                     setCorrectAnswerCount={setCorrectAnswerCount}

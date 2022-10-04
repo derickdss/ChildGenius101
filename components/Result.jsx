@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { Text, Button, View, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { TiTimesOutline, TiTickOutline } from "react-icons/ti";
+import { CgSmile, CgSmileSad } from "react-icons/cg";
+import reactDom from "react-dom";
 
 const ResultStatement = ({ mode, result, countdownTime }) => {
     const correctAnswerCount = result.filter((res) => res.answerCorrect).length;
@@ -99,9 +102,38 @@ const Answers = ({ result }) => (
                                         {item.answerInput !==
                                         item.correctAnswer ? (
                                             <Text style={{ color: "green" }}>
-                                                {` => ${item.correctAnswer}`}
+                                                <TiTimesOutline
+                                                    style={{
+                                                        marginBottom: -2,
+                                                        color: "red",
+                                                    }}
+                                                />
+                                                <CgSmileSad
+                                                    style={{
+                                                        marginBottom: -2,
+                                                        color: "red",
+                                                    }}
+                                                />
+                                                {"   "}
+                                                {item.correctAnswer}
+                                                <TiTickOutline
+                                                    style={{ marginBottom: -2 }}
+                                                />
                                             </Text>
-                                        ) : null}
+                                        ) : (
+                                            <Text>
+                                                <TiTickOutline
+                                                    style={{
+                                                        marginBottom: -2,
+                                                    }}
+                                                />
+                                                <CgSmile
+                                                    style={{
+                                                        marginBottom: -2,
+                                                    }}
+                                                />
+                                            </Text>
+                                        )}
                                     </Text>
                                 </Text>
                             </View>
@@ -117,7 +149,8 @@ const Result = ({ mode, reloadPage, result, countdownTime }) => (
     <View
         style={{
             display: "flex",
-            justifyContent: "flex-start",
+            justifyContent: "center",
+            marginTop: -75,
         }}
     >
         <ResultStatement

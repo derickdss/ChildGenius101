@@ -31,6 +31,7 @@ export default function Addition({ navigation, route }) {
                 <QuestionBlock
                     operation={"addition"}
                     mode={route?.params?.mode}
+                    mathLevel={route?.params?.mathLevel}
                     setQuizComplete={setQuizComplete}
                     correctAnswerCount={correctAnswerCount}
                     setCorrectAnswerCount={setCorrectAnswerCount}

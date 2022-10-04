@@ -8687,7 +8687,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-promise@^8.0.3:
+promise@^8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/promise/-/promise-8.2.0.tgz#a1f6280ab67457fbfc8aad2b198c9497e9e5c806"
   integrity sha512-+CMAlLHqwRYwBMXKCP+o8ns7DN+xHDUiI+0nArsiJ9y+kJVPLFxEaSw6Ha9s9H0tftxg2Yzl25wqj9G7m5wLZg==
@@ -8964,6 +8964,11 @@ react-freeze@^1.0.0:
   resolved "https://registry.yarnpkg.com/react-freeze/-/react-freeze-1.0.3.tgz#5e3ca90e682fed1d73a7cb50c2c7402b3e85618d"
   integrity sha512-ZnXwLQnGzrDpHBHiC56TXFXvmolPeMjTn1UOm610M4EXGzbEDR7oOIyS2ZiItgbs6eZc4oU/a0hpk8PrcKvv5g==
 
+react-icons@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.4.0.tgz#a13a8a20c254854e1ec9aecef28a95cdf24ef703"
+  integrity sha512-fSbvHeVYo/B5/L4VhB7sBA1i2tS8MkT0Hb9t2H1AVPkwGfVHLJCqyr2Py9dKMxsyM63Eng1GkdZfbWj+Fmv8Rg==
+
 "react-is@^16.12.0 || ^17.0.0 || ^18.0.0":
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
@@ -9052,10 +9057,10 @@ react-native-web@~0.18.7:
     postcss-value-parser "^4.2.0"
     styleq "^0.1.2"
 
-react-native@0.69.5:
-  version "0.69.5"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.69.5.tgz#959142bfef21beed837160b54aa17313f5e1898f"
-  integrity sha512-4Psrj1nDMLQjBXVH8n3UikzOHQc8+sa6NbxZQR0XKtpx8uC3HiJBgX+/FIum/RWxfi5J/Dt/+A2gLGmq2Hps8g==
+react-native@0.69.6:
+  version "0.69.6"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.69.6.tgz#cdd1a5757d902b91b165c28fdda4e518ed6f683a"
+  integrity sha512-wwXpqM+12kdEYdBZCJUb5SBu95CzgejrwFeYJ78RzHZV/Sj6DBRekbsHGrDDsY4R25QXALQxy4DQYQCObVvWjA==
   dependencies:
     "@jest/create-cache-key-function" "^27.0.1"
     "@react-native-community/cli" "^8.0.4"
@@ -9078,7 +9083,7 @@ react-native@0.69.5:
     mkdirp "^0.5.1"
     nullthrows "^1.1.1"
     pretty-format "^26.5.2"
-    promise "^8.0.3"
+    promise "^8.2.0"
     react-devtools-core "4.24.0"
     react-native-codegen "^0.69.2"
     react-native-gradle-plugin "^0.0.7"

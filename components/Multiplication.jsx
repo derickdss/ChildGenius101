@@ -30,7 +30,8 @@ export default function Multiplication({ navigation, route }) {
             {!quizComplete ? (
                 <QuestionBlock
                     operation={"multiplication"}
-                    mode={route.params.mode}
+                    mode={route?.params?.mode}
+                    mathLevel={route?.params?.mathLevel}
                     setQuizComplete={setQuizComplete}
                     correctAnswerCount={correctAnswerCount}
                     setCorrectAnswerCount={setCorrectAnswerCount}
