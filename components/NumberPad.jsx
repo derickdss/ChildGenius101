@@ -1,8 +1,6 @@
 import react, {useState} from "react";
-import { TiTickOutline } from "react-icons/ti";
-import { BsBackspace } from "react-icons/bs";
-import { View, Button, Text } from "react-native";
-import { TouchableHighlight } from "react-native-gesture-handler";
+import { AntDesign } from '@expo/vector-icons'; 
+import { View, Text, TouchableHighlight } from "react-native";
 import Buttons from "./Buttons";
 
 const NumberPad = ({
@@ -59,7 +57,7 @@ const NumberPad = ({
                 >
                     <View style={{ alignItems: "center" }}>
                         <Text style={{ color: "white" }}>Enter</Text>
-                        <TiTickOutline />
+                        <AntDesign name="checkcircleo" size={24} color="white" />
                     </View>
                 </TouchableHighlight>
                 <Buttons
@@ -84,33 +82,10 @@ const NumberPad = ({
                 >
                     <View style={{ alignItems: "center" }}>
                         <Text style={{ color: "white" }}>Backspace</Text>
-                        <BsBackspace />
+                        <AntDesign name="stepbackward" size={24} color="white" />
                     </View>
                 </TouchableHighlight>
             </View>
-            {/* <View
-                style={{
-                    flexDirection: "row",
-                }}
-            >
-                <View style={{ flex: 1 }}>
-                    <Button
-                        title={"Enter"}
-                        onPress={setAnswerValue}
-                        disabled={false}
-                        color={"green"}
-                    />
-                </View>
-                <View style={{ flex: 1, marginLeft: 10 }}>
-                    <Button
-                        title={"|<- Backspace"}
-                        onPress={backspaceNumpadValue}
-                        disabled={false}
-                        color={"green"}
-                        style={{ flex: 1, marginLeft: 10 }}
-                    />
-                </View>
-            </View> */}
         </View>
     );
 };
