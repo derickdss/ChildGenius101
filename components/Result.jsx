@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { Text, Button, View, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { TiTimesOutline, TiTickOutline } from "react-icons/ti";
-import { CgSmile, CgSmileSad } from "react-icons/cg";
+import { Entypo, Feather, AntDesign } from '@expo/vector-icons';
 import reactDom from "react-dom";
 
 const ResultStatement = ({ mode, result, countdownTime }) => {
@@ -102,32 +101,31 @@ const Answers = ({ result }) => (
                                         {item.answerInput !==
                                         item.correctAnswer ? (
                                             <Text style={{ color: "green" }}>
-                                                <TiTimesOutline
-                                                    style={{
-                                                        marginBottom: -2,
-                                                        color: "red",
-                                                    }}
-                                                />
-                                                <CgSmileSad
-                                                    style={{
-                                                        marginBottom: -2,
-                                                        color: "red",
-                                                    }}
-                                                />
+                                                <Entypo name="cross" size={24} color="red" style={{
+                                                        marginBottom: -2
+                                                    }}/>
+                                                <Entypo name="emoji-sad" size={24} style={{
+                                                        marginBottom: -2
+                                                    }} color="red" />
                                                 {"   "}
                                                 {item.correctAnswer}
-                                                <TiTickOutline
+                                                <AntDesign name="checkcircleo" size={24} color="green"
                                                     style={{ marginBottom: -2 }}
+                                                />
+                                                <Feather name="smile" size={24} color="green"
+                                                    style={{
+                                                        marginBottom: -2,
+                                                    }}
                                                 />
                                             </Text>
                                         ) : (
                                             <Text>
-                                                <TiTickOutline
+                                               <AntDesign name="checkcircleo" size={24} color="green" 
                                                     style={{
                                                         marginBottom: -2,
                                                     }}
                                                 />
-                                                <CgSmile
+                                                <Feather name="smile" size={24} color="green"
                                                     style={{
                                                         marginBottom: -2,
                                                     }}

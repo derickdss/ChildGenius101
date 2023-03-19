@@ -57,11 +57,11 @@ const styles = StyleSheet.create({
     },
     section: {
         //minHeight: '18.57%',
-        width: '100%',
+        // width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        //// borderColor: 'white',
-        //// borderWidth: 1,
+        // borderColor: 'red',
+        // borderWidth: 1,
         padding: 75,
     },
     answers: {
