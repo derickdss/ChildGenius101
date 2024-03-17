@@ -15,7 +15,7 @@
   "submit": {
     "production": {
       "android": {
-        "serviceAccountKeyPath": "~/Dev/Pers/And/GooglePlay/pc-api-6601450582664418632-860-11d0f279da62.json"
+        "serviceAccountKeyPath": "../And/GooglePlay/pc-api-6601450582664418632-860-11d0f279da62.json"
       }
     }
   }
