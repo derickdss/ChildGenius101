@@ -14,6 +14,7 @@
     "@react-navigation/native-stack": "^6.5.1",
     "eas-cli": "^2.9.0",
     "expo": "~47.0.12",
+    "expo-build-properties": "^0.11.1",
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
     "react-dom": "18.1.0",

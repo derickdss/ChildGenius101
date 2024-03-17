@@ -3,6 +3,7 @@ import { Text, Button, View, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Entypo, Feather, AntDesign } from '@expo/vector-icons';
 import reactDom from "react-dom";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ResultStatement = ({ mode, result, countdownTime }) => {
     const correctAnswerCount = result.filter((res) => res.answerCorrect).length;
@@ -10,7 +11,7 @@ const ResultStatement = ({ mode, result, countdownTime }) => {
     const [showText, setShowText] = useState(true);
     const timePerQuestion =
         result.length && mode === "Challenge"
-            ? (countdownTime / result.length).toFixed(2)
+            ? (countdownTime / correctAnswerCount).toFixed(2)
             : 0;
     useEffect(() => {
         // Change the state every second or the time given by User.
@@ -79,7 +80,7 @@ const ResultOptions = ({ reloadPage }) => {
 const Answers = ({ result }) => (
     <View>
         {result.length ? (
-            <View style={{ paddingTop: 25, display: "flex", paddingLeft: 20 }}>
+            <SafeAreaView style={{ paddingTop: 25, display: "flex", flex: 1,paddingLeft: 20 }}>
                 <Text style={{ fontWeight: "bold" }}>Answers:</Text>
                 <View>
                     <FlatList
@@ -138,7 +139,7 @@ const Answers = ({ result }) => (
                         )}
                     />
                 </View>
-            </View>
+            </SafeAreaView>
         ) : null}
     </View>
 );
