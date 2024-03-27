@@ -7,6 +7,7 @@ const AnswerButtons = ({ rows, values, setAnswerValue, answerValue }) => {
     for (let i = 0; rowedValues.flat().length < values.length; i = i + rows) {
         rowedValues = [...rowedValues, values.slice(i, i + 2)];
     }
+    
     return (
         <View>
             {rowedValues.map((row, index) => (

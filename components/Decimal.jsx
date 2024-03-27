@@ -3,11 +3,11 @@ import { View } from "react-native";
 import QuestionBlock from "./QuestionBlock";
 import Result from "./Result";
 
-export default function Multiplication({ navigation, route }) {
+export default function Decimal({ navigation, route }) {
     const [quizComplete, setQuizComplete] = useState(false);
     const [correctAnswerCount, setCorrectAnswerCount] = useState(0);
     const [wrongAnswerCount, setWrongAnswerCount] = useState(0);
-    const [result, setResult] = useState([]);
+    const [result, setResult] = useState([])
     const [timerValue, setTimerValue] = useState();
     const [countdownTime, setCountdowntime] = useState(60);
 
@@ -29,7 +29,7 @@ export default function Multiplication({ navigation, route }) {
         >
             {!quizComplete ? (
                 <QuestionBlock
-                    operation={"Multiplication"}
+                    operation={"Decimal"}
                     mode={route?.params?.mode}
                     mathLevel={route?.params?.mathLevel}
                     setQuizComplete={setQuizComplete}

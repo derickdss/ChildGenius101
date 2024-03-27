@@ -29,7 +29,7 @@ export default function Division({ navigation, route }) {
         >
             {!quizComplete ? (
                 <QuestionBlock
-                    operation={"division"}
+                    operation={"Division"}
                     mode={route?.params?.mode}
                     mathLevel={route?.params?.mathLevel}
                     setQuizComplete={setQuizComplete}

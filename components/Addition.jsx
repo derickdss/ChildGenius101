@@ -29,7 +29,7 @@ export default function Addition({ navigation, route }) {
         >
             {!quizComplete ? (
                 <QuestionBlock
-                    operation={"addition"}
+                    operation={"Addition"}
                     mode={route?.params?.mode}
                     mathLevel={route?.params?.mathLevel}
                     setQuizComplete={setQuizComplete}

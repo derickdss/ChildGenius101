@@ -12,10 +12,6 @@ export default function Home({ navigation }) {
                         title={"Addition"}
                         onPress={() => navigation.navigate('PracticeChallenge', {operation :'Addition'})}
                     />
-                    {/* I see the button text used from the title tag, 
-                    dont see the purpose of the content here */}
-                    {/* Math{" "}
-                    </Button> */}
                 </View>
                 <View style={{ marginTop: 10 }}>
                     <Button
@@ -36,6 +32,13 @@ export default function Home({ navigation }) {
                         style={{}}
                         title={"Division"}
                         onPress={() => navigation.navigate('PracticeChallenge', {operation :'Division'})}
+                    />
+                </View>
+                <View style={{ marginTop: 10 }}>
+                    <Button
+                        style={{}}
+                        title={"Decimal"}
+                        onPress={() => navigation.navigate('PracticeChallenge', {operation :'Decimal'})}
                     />
                 </View>
             </View>

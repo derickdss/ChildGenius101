@@ -1,15 +1,36 @@
-import getRandomInt from "../utils/getRandomInt";
+import getRandomInt, { getRandomFloat } from "../utils/getRandomInt";
 
-export const getAnswers = (operand1, operator, operand2) => {
+export const getAnswer = (operand1, operator, operand2, threeDecimalPlaces) => {
+    const answer = eval(operand1 + operator + operand2);
+    if(operand1 % 1 != 0 && operand2 % 1 != 0 ) {
+        return answer.toFixed(threeDecimalPlaces ? 3 : 2 );
+    }
+    return answer;
+} 
+
+export const getAnswersArray = (operand1, operator, operand2, mixedDecimal=false, threeDecimalPlaces=false) => {
     const answerArray = [];
-    let answer = eval(operand1 + operator + operand2);
-    let maxAnswerOptions = answer < 6 ? 6 : 1.5 * answer;
+    let answer = getAnswer(operand1, operator, operand2, threeDecimalPlaces)
+    answerArray.push(answer);
+    let answerOption = answer;
+    let maxAnswerOptions = (operand1 % 1 != 0 && operand2 % 1 != 0 ) ? 0.99 : (answer < 6 ? 6 : 1.5 * answer);
+    
     while (answerArray.length < 4) {
-        answerArray.indexOf(answer) < 0 ? answerArray.push(answer) : null;
-        answer = getRandomInt(
-            1,
-            answerArray.length < 2 ? maxAnswerOptions / 2 : maxAnswerOptions
-        );
+        if(answerArray.indexOf(answerOption) < 0) {
+            answerArray.push(answerOption)
+        }
+        if( operand1 % 1 != 0 && operand2 % 1 != 0 ) {
+            answerOption = getRandomFloat(
+                mixedDecimal,
+                threeDecimalPlaces
+            )
+        } else {
+            answerOption = getRandomInt(
+                1,
+                answerArray.length < 2 ? maxAnswerOptions / 2 : maxAnswerOptions,
+                mixedDecimal,
+            );
+        }    
     }
     return answerArray;
 };
