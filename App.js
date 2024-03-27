@@ -8,6 +8,7 @@ import PracticeChallenge from './components/PracticeChallenge';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './components/Home';
+import Decimal from './components/Decimal';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -81,6 +82,21 @@ export default function App() {
           component={Division}
           options={{
             title: 'Division',
+            headerStyle: {
+              backgroundColor: 'rgb(82, 82, 194)'
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Decimal"
+          component={Decimal}
+          options={{
+            title: 'Decimal',
             headerStyle: {
               backgroundColor: 'rgb(82, 82, 194)'
             },

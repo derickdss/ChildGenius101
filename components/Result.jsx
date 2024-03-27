@@ -92,15 +92,13 @@ const Answers = ({ result }) => (
                                     <Text
                                         style={{
                                             color:
-                                                item.answerInput ===
-                                                item.correctAnswer
+                                                item.answerCorrect
                                                     ? "green"
                                                     : "red",
                                         }}
                                     >
                                         {item.answerInput}
-                                        {item.answerInput !==
-                                        item.correctAnswer ? (
+                                        {!item.answerCorrect ? (
                                             <Text style={{ color: "green" }}>
                                                 <Entypo name="cross" size={24} color="red" style={{
                                                         marginBottom: -2
@@ -144,22 +142,25 @@ const Answers = ({ result }) => (
     </View>
 );
 
-const Result = ({ mode, reloadPage, result, countdownTime }) => (
-    <View
-        style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: -75,
-        }}
-    >
-        <ResultStatement
-            result={result}
-            countdownTime={countdownTime}
-            mode={mode}
-        />
-        <ResultOptions reloadPage={reloadPage} />
-        <Answers result={result} />
-    </View>
-);
+const Result = ({ mode, reloadPage, result, countdownTime }) => {
+    console.log('derd, results', result)
+    return (
+        <View
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: -75,
+            }}
+        >
+            <ResultStatement
+                result={result}
+                countdownTime={countdownTime}
+                mode={mode}
+            />
+            <ResultOptions reloadPage={reloadPage} />
+            <Answers result={result} />
+        </View>
+    );
+}
 
 export default Result;
