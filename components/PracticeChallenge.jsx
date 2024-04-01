@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Button, Text } from "react-native";
+import { View, Button } from "react-native";
 import TouchableOpacityButton from "./TouchableOpacityButton";
 
 export default function PracticeChallenge({ navigation, route }) {
@@ -91,6 +91,8 @@ export default function PracticeChallenge({ navigation, route }) {
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "center",
+                            alignItems: 'center',
+                            margin: 4,
                         }}
                     >
                         {levels.map((level, index) => (
@@ -104,10 +106,11 @@ export default function PracticeChallenge({ navigation, route }) {
                                         : setMathLevel(level)
                                 }
                                 style={{
-                                    width: 25,
-                                    height: 25,
+                                    width: level === mathLevel ? 30 : 23,
+                                    height: level === mathLevel ? 30 : 23,
                                     fontSize: 10,
                                     borderRadius: 100,
+                                    textDecoration: level === mathLevel ? 'underline' : 'none',
                                     backgroundColor:
                                         level > mathLevel
                                             ? "lightgrey"
@@ -129,10 +132,6 @@ export default function PracticeChallenge({ navigation, route }) {
                             })
                         }
                     />
-                    {/* I see the button text used from the title tag, 
-                    dont see the purpose of the content here */}
-                    {/* Math{" "}
-                    </Button> */}
                 </View>
                 <View style={{ marginTop: 10 }}>
                     <Button

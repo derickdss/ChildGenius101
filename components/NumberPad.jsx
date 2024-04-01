@@ -13,6 +13,7 @@ const NumberPad = ({
   setNumpadValue,
   setAnswerValue,
   backspaceNumpadValue,
+  operation
 }) => {
   const [dimensions, setDimensions] = useState({
     window: windowDimensions,
@@ -73,26 +74,11 @@ const NumberPad = ({
         }}
       >
         <TouchableHighlight
-          onPress={backspaceNumpadValue}
-          disabled={!answerValue}
-          style={{
-            margin: 6,
-            width,
-            backgroundColor: answerValue ? "red" : "grey",
-            color: "white",
-          }}
-        >
-          <View style={{ alignItems: "center" }}>
-            <Text style={{ color: "white" }}>Backspace</Text>
-            <AntDesign name="stepbackward" size={24} color="white" />
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
           onPress={() => setNumpadValue(0)}
           style={{
             margin: 6,
             height: 60,
-            width,
+            width: width * 1.525,
             backgroundColor: "rgb(33, 150, 243)",
             color: "white",
             justifyContent: "center",
@@ -103,11 +89,52 @@ const NumberPad = ({
           </View>
         </TouchableHighlight>
         <TouchableHighlight
+          onPress={() => setNumpadValue(".")}
+          disabled={operation !== 'Decimal'}
+          style={{
+            margin: 6,
+            height: 60,
+            width: width * 1.525,
+            backgroundColor: operation !== 'Decimal' ? "grey" : "rgb(33, 150, 243)" ,
+            color: "white",
+            justifyContent: "center",
+          }}
+        >
+          <View style={{ alignItems: "center" }}>
+            <Text style={{ color: "white" }}>.</Text>
+          </View>
+        </TouchableHighlight>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+        }}
+      >
+        <TouchableHighlight
+          onPress={backspaceNumpadValue}
+          disabled={!answerValue}
+          style={{
+            margin: 6,
+            height: 60,
+            padding: 6,
+            width: width * 1.525,
+            backgroundColor: answerValue ? "red" : "grey",
+            color: "white",
+          }}
+        >
+          <View style={{ alignItems: "center" }}>
+            <Text style={{ color: "white" }}>Backspace</Text>
+            <AntDesign name="stepbackward" size={24} color="white" />
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight
           onPress={setAnswerValue}
           disabled={!answerValue}
           style={{
             margin: 6,
-            width,
+            height: 60,
+            padding: 6,
+            width: width * 1.525,
             backgroundColor: answerValue ? "green" : "grey",
             color: "white",
           }}
