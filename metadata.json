@@ -1,0 +1,6 @@
+
+{
+  "name": "MathGenius AI",
+  "description": "An interactive, AI-powered math learning platform for children featuring personalized tutoring, adaptive challenges, and gamified progress tracking.",
+  "requestFramePermissions": ["microphone"]
+}
