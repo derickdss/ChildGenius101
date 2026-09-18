@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.0",
+    "@react-native-async-storage/async-storage": "~1.17.4",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.1",
     "eas-cli": "^2.9.0",

@@ -1,34 +1,29 @@
-import react from "react";
-import { View, Text } from "react-native";
+import React from "react";
+import { View } from "react-native";
 import Buttons from "./Buttons";
 
-const AnswerButtons = ({ rows, values, setAnswerValue, answerValue }) => {
-    let rowedValues = [];
-    for (let i = 0; rowedValues.flat().length < values.length; i = i + rows) {
-        rowedValues = [...rowedValues, values.slice(i, i + 2)];
-    }
-    
-    return (
-        <View>
-            {rowedValues.map((row, index) => (
-                <View
-                    style={{
-                        flexDirection: "row",
-                    }}
-                    key={`${row}_${index}`}
-                >
-                    {row.map((column, index) => (
-                        <Buttons
-                            answer={`${column}`}
-                            setAnswerValue={setAnswerValue}
-                            disabled={answerValue !== "  "}
-                            key={`${column}_${index}`}
-                        />
-                    ))}
-                </View>
-            ))}
+const AnswerButtons = ({ values, setAnswerValue, answerValue }) => {
+  const rows = [];
+  for (let i = 0; i < values.length; i += 2) {
+    rows.push(values.slice(i, i + 2));
+  }
+
+  return (
+    <View>
+      {rows.map((row, rowIndex) => (
+        <View style={{ flexDirection: "row" }} key={rowIndex}>
+          {row.map((value, colIndex) => (
+            <Buttons
+              answer={`${value}`}
+              setAnswerValue={setAnswerValue}
+              disabled={answerValue !== "  "}
+              key={`${value}_${colIndex}`}
+            />
+          ))}
         </View>
-    );
+      ))}
+    </View>
+  );
 };
 
 export default AnswerButtons;
