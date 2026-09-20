@@ -6,11 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -25,18 +20,16 @@
         "expo-build-properties",
         {
           "android": {
-            "minSdkVersion":33,
-            "compileSdkVersion": 33,
-            "targetSdkVersion": 33,
-            "buildToolsVersion": "33.0.0"
+            "minSdkVersion": 24,
+            "targetSdkVersion": 36
           }
         }
-      ]
+      ],
+      "expo-status-bar"
     ],
     "android": {
       "package": "com.child.genius",
-			"targetSdk": 33,
-      "versionCode":18,
+      "versionCode": 18,
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#FFFFFF"
