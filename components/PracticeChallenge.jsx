@@ -1,151 +1,113 @@
-import { useState } from "react";
-import { View, Button } from "react-native";
+import React, { useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import TouchableOpacityButton from "./TouchableOpacityButton";
 
+const LEVEL_CATEGORIES = [
+  { category: "Easy", maxLevel: 4, color: "#FFD54F" },
+  { category: "Medium", maxLevel: 8, color: "#FFA726" },
+  { category: "Hard", maxLevel: 12, color: "#EF5350" },
+];
+
+const LEVELS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+const BigButton = ({ title, onPress, color, marginTop }) => (
+  <TouchableOpacity
+    onPress={onPress}
+    activeOpacity={0.8}
+    style={{
+      backgroundColor: color,
+      borderRadius: 12,
+      paddingVertical: 14,
+      alignItems: "center",
+      marginTop,
+    }}
+  >
+    <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>{title}</Text>
+  </TouchableOpacity>
+);
+
 export default function PracticeChallenge({ navigation, route }) {
-    const [mathLevel, setMathLevel] = useState(4);
-    const levelCategories = [
-        {
-            category: "Easy",
-            maxLevel: 4,
-            minLevel: 2,
-            textWidth: 70,
-            color: "yellow",
-        },
-        {
-            category: "Medium",
-            maxLevel: 8,
-            minLevel: 5,
-            textWidth: 95,
-            color: "orange",
-        },
-        {
-            category: "Hard",
-            maxLevel: 12,
-            minLevel: 9,
-            textWidth: 90,
-            color: "red",
-        },
-        /*{ category: "Epic", maxLeveL: 15, minLevel: 13}*/
-    ];
-    const levels = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 /*, 13, 14, 15*/];
-    const easyMaxLevel = levelCategories[0].maxLevel;
+  const [mathLevel, setMathLevel] = useState(4);
 
-    const categorySwitcher = (category) => {
-        const catLevel = levelCategories.findIndex(
-            (cat) => cat.category === category
-        );
-        setMathLevel(levelCategories[catLevel][`maxLevel`]);
-    };
+  const categorySwitcher = (category) => {
+    const cat = LEVEL_CATEGORIES.find((c) => c.category === category);
+    if (cat) setMathLevel(cat.maxLevel);
+  };
 
-    return (
-        <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-            <View style={{ width: 250 }}>
-                <View
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        marginVertical: 50,
-                    }}
-                >
-                    <View
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "flex-start",
-                            marginLeft: -10,
-                            marginBottom: 5,
-                        }}
-                    >
-                        {levelCategories.map((category, index) => (
-                            <View
-                                key={`${index}_${category.category}_${category.minLevel}`}
-                                onClick={() =>
-                                    categorySwitcher(category.category)
-                                }
-                                style={{ cursor: "pointer" }}
-                            >
-                                <TouchableOpacityButton
-                                    key={`${index}_${category.category}_${category.minLevel}`}
-                                    title={`${category.category}`}
-                                    style={{
-                                        marginLeft: index !== 0 ? 5 : 0,
-                                        width: category.textWidth,
-                                        height: 20,
-                                        justifyContent: "center",
-                                        backgroundColor: category.color,
-                                        fontWeight: "bold",
-                                    }}
-                                    onPress={() =>
-                                        categorySwitcher(category.category)
-                                    }
-                                />
-                            </View>
-                        ))}
-                    </View>
-                    <View
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            alignItems: 'center',
-                            margin: 4,
-                        }}
-                    >
-                        {levels.map((level, index) => (
-                            <TouchableOpacityButton
-                                key={`${index}_${level}`}
-                                title={level}
-                                mathLevel={mathLevel}
-                                onPress={() =>
-                                    level <= 4
-                                        ? setMathLevel(easyMaxLevel)
-                                        : setMathLevel(level)
-                                }
-                                style={{
-                                    width: level === mathLevel ? 30 : 23,
-                                    height: level === mathLevel ? 30 : 23,
-                                    fontSize: 10,
-                                    borderRadius: 100,
-                                    textDecoration: level === mathLevel ? 'underline' : 'none',
-                                    backgroundColor:
-                                        level > mathLevel
-                                            ? "lightgrey"
-                                            : "grey",
-                                    justifyContent: "center",
-                                }}
-                            />
-                        ))}
-                    </View>
-                </View>
-                <View>
-                    <Button
-                        style={{}}
-                        title={"Practice"}
-                        onPress={() =>
-                            navigation.navigate(route.params.operation, {
-                                mode: "Practice",
-                                mathLevel: mathLevel,
-                            })
-                        }
-                    />
-                </View>
-                <View style={{ marginTop: 10 }}>
-                    <Button
-                        style={{}}
-                        title={"Challenge"}
-                        onPress={() =>
-                            navigation.navigate(route.params.operation, {
-                                mode: "Challenge",
-                                mathLevel: mathLevel,
-                            })
-                        }
-                    />
-                </View>
-            </View>
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#F3F0FF",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <View style={{ width: 280 }}>
+        <Text style={{ textAlign: "center", fontSize: 16, marginBottom: 20, color: "#444" }}>
+          Pick a level, then choose how to play.
+        </Text>
+        <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10 }}>
+          {LEVEL_CATEGORIES.map((category, index) => (
+            <TouchableOpacityButton
+              key={category.category}
+              title={category.category}
+              onPress={() => categorySwitcher(category.category)}
+              style={{
+                marginLeft: index !== 0 ? 5 : 0,
+                width: 80,
+                height: 26,
+                justifyContent: "center",
+                backgroundColor: category.color,
+                fontWeight: "bold",
+              }}
+            />
+          ))}
         </View>
-    );
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: 4,
+          }}
+        >
+          {LEVELS.map((level) => (
+            <TouchableOpacityButton
+              key={level}
+              title={level}
+              onPress={() => setMathLevel(level)}
+              style={{
+                width: level === mathLevel ? 30 : 23,
+                height: level === mathLevel ? 30 : 23,
+                fontSize: 10,
+                borderRadius: 100,
+                backgroundColor: level > mathLevel ? "lightgrey" : "grey",
+                justifyContent: "center",
+              }}
+            />
+          ))}
+        </View>
+        <Text style={{ textAlign: "center", marginVertical: 12, color: "#555", fontWeight: "bold" }}>
+          Level {mathLevel}
+        </Text>
+        <BigButton
+          title="Practice — 10 questions"
+          onPress={() =>
+            navigation.navigate(route.params.operation, { mode: "Practice", mathLevel })
+          }
+          color="#7E57C2"
+        />
+        <BigButton
+          title="Challenge — beat the clock!"
+          onPress={() =>
+            navigation.navigate(route.params.operation, { mode: "Challenge", mathLevel })
+          }
+          color="#FF7043"
+          marginTop={12}
+        />
+      </View>
+    </View>
+  );
 }

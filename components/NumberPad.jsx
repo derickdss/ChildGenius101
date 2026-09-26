@@ -1,39 +1,18 @@
-import react, { useState, useEffect } from "react";
+import React from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { View, Text, TouchableHighlight, Dimensions } from "react-native";
-import Buttons from "./Buttons";
+import { Dimensions, Text, TouchableHighlight, View } from "react-native";
 
-const windowDimensions = Dimensions.get("window");
-const screenDimensions = Dimensions.get("screen");
+const { width: screenWidth } = Dimensions.get("window");
 
 const NumberPad = ({
-  rows,
-  values,
   answerValue,
   setNumpadValue,
   setAnswerValue,
   backspaceNumpadValue,
-  operation
+  operation,
 }) => {
-  const [dimensions, setDimensions] = useState({
-    window: windowDimensions,
-    screen: screenDimensions,
-  });
-
-  useEffect(() => {
-    const subscription = Dimensions.addEventListener(
-      "change",
-      ({ window, screen }) => {
-        setDimensions({ window, screen });
-      }
-    );
-    return () => subscription?.remove();
-  });
-
-  const width =
-    dimensions.window.width < 800 ? dimensions.window.width / 3.5 : 200;
-
-  const rowedValues = [
+  const width = screenWidth < 800 ? screenWidth / 3.5 : 200;
+  const rows = [
     [1, 2, 3],
     [4, 5, 6],
     [7, 8, 9],
@@ -41,13 +20,8 @@ const NumberPad = ({
 
   return (
     <View>
-      {rowedValues.map((row, index) => (
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-          key={`${row}_index`}
-        >
+      {rows.map((row) => (
+        <View style={{ flexDirection: "row" }} key={row[0]}>
           {row.map((column) => (
             <TouchableHighlight
               key={column}
@@ -57,22 +31,17 @@ const NumberPad = ({
                 height: 60,
                 width,
                 backgroundColor: "rgb(33, 150, 243)",
-                color: "white",
                 justifyContent: "center",
               }}
             >
               <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white" }}>{column}</Text>
+                <Text style={{ color: "white", fontSize: 24 }}>{column}</Text>
               </View>
             </TouchableHighlight>
           ))}
         </View>
       ))}
-      <View
-        style={{
-          flexDirection: "row",
-        }}
-      >
+      <View style={{ flexDirection: "row" }}>
         <TouchableHighlight
           onPress={() => setNumpadValue(0)}
           style={{
@@ -80,36 +49,30 @@ const NumberPad = ({
             height: 60,
             width: width * 1.525,
             backgroundColor: "rgb(33, 150, 243)",
-            color: "white",
             justifyContent: "center",
           }}
         >
           <View style={{ alignItems: "center" }}>
-            <Text style={{ color: "white" }}>0</Text>
+            <Text style={{ color: "white", fontSize: 24 }}>0</Text>
           </View>
         </TouchableHighlight>
         <TouchableHighlight
           onPress={() => setNumpadValue(".")}
-          disabled={operation !== 'Decimal'}
+          disabled={operation !== "Decimal"}
           style={{
             margin: 6,
             height: 60,
             width: width * 1.525,
-            backgroundColor: operation !== 'Decimal' ? "grey" : "rgb(33, 150, 243)" ,
-            color: "white",
+            backgroundColor: operation !== "Decimal" ? "grey" : "rgb(33, 150, 243)",
             justifyContent: "center",
           }}
         >
           <View style={{ alignItems: "center" }}>
-            <Text style={{ color: "white" }}>.</Text>
+            <Text style={{ color: "white", fontSize: 24 }}>.</Text>
           </View>
         </TouchableHighlight>
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-        }}
-      >
+      <View style={{ flexDirection: "row" }}>
         <TouchableHighlight
           onPress={backspaceNumpadValue}
           disabled={!answerValue}
@@ -119,7 +82,6 @@ const NumberPad = ({
             padding: 6,
             width: width * 1.525,
             backgroundColor: answerValue ? "red" : "grey",
-            color: "white",
           }}
         >
           <View style={{ alignItems: "center" }}>
@@ -136,7 +98,6 @@ const NumberPad = ({
             padding: 6,
             width: width * 1.525,
             backgroundColor: answerValue ? "green" : "grey",
-            color: "white",
           }}
         >
           <View style={{ alignItems: "center" }}>

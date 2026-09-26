@@ -1,166 +1,104 @@
-import { useState, useEffect } from "react";
-import { Text, Button, View, FlatList } from "react-native";
+import React from "react";
+import { Button, FlatList, SafeAreaView, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Entypo, Feather, AntDesign } from '@expo/vector-icons';
-import reactDom from "react-dom";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-const ResultStatement = ({ mode, result, countdownTime }) => {
-    const correctAnswerCount = result.filter((res) => res.answerCorrect).length;
-    const wrongAnswerCount = result.length - correctAnswerCount;
-    const [showText, setShowText] = useState(true);
-    const timePerQuestion =
-        result.length && mode === "Challenge"
-            ? (countdownTime / correctAnswerCount).toFixed(2)
-            : 0;
-    useEffect(() => {
-        // Change the state every second or the time given by User.
-        const interval = setInterval(() => {
-            setShowText((showText) => !showText);
-        }, 500);
-        return () => clearInterval(interval);
-    }, []);
+const computeBestStreak = (result) => {
+  let best = 0;
+  let current = 0;
+  result.forEach((item) => {
+    current = item.answerCorrect ? current + 1 : 0;
+    if (current > best) best = current;
+  });
+  return best;
+};
 
-    return (
-        <View
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-            }}
-        >
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>You Scored</Text>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                <Text
-                    style={{ color: "green" }}
-                >{` ${correctAnswerCount} `}</Text>
-                correct and{" "}
-            </Text>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                <Text style={{ color: "red" }}>{` ${wrongAnswerCount} `}</Text>
-                incorrect answers
-            </Text>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                {showText && result.length && mode === "Challenge" ? (
-                    <Text
-                        style={{ textAlign: "center" }}
-                    >{`${timePerQuestion}sec/question`}</Text>
-                ) : (
-                    <Text>{"         "}</Text>
-                )}
-            </Text>
-        </View>
-    );
+const ResultStatement = ({ mode, result, gameStats }) => {
+  const correctAnswerCount = result.filter((res) => res.answerCorrect).length;
+  const wrongAnswerCount = result.length - correctAnswerCount;
+  const bestStreak = computeBestStreak(result);
+  const timePerQuestion =
+    mode === "Challenge" && result.length ? (60 / result.length).toFixed(1) : null;
+
+  return (
+    <View style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <Text style={{ fontSize: 24, fontWeight: "bold" }}>You Scored</Text>
+      <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 6 }}>
+        <Text style={{ color: "green" }}>{` ${correctAnswerCount} `}</Text>
+        correct and{" "}
+        <Text style={{ color: "red" }}>{` ${wrongAnswerCount} `}</Text>
+        incorrect answers
+      </Text>
+      {bestStreak >= 2 && (
+        <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 6 }}>
+          🔥 Best streak: {bestStreak} in a row!
+        </Text>
+      )}
+      {timePerQuestion && (
+        <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 6 }}>
+          {`${timePerQuestion}s per question`}
+        </Text>
+      )}
+      {gameStats?.isNewBest ? (
+        <Text style={{ fontSize: 22, fontWeight: "bold", color: "orange", marginTop: 8 }}>
+          🏆 New best score!
+        </Text>
+      ) : gameStats && gameStats.best > 0 ? (
+        <Text style={{ fontSize: 16, marginTop: 8 }}>
+          Your {mode === "Challenge" ? "challenge" : "practice"} best: {gameStats.best}
+        </Text>
+      ) : null}
+    </View>
+  );
 };
 
 const ResultOptions = ({ reloadPage }) => {
-    const navigation = useNavigation();
-    return (
-        <View
-            style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                margin: 10,
-            }}
-        >
-            <View style={{ marginLeft: 10, marginRight: 5, width: 80 }}>
-                <Button title="Retake" onPress={reloadPage} />
-            </View>
-            <View style={{ marginLeft: 10, marginRight: 5, width: 80 }}>
-                <Button
-                    title="Home"
-                    onPress={() => navigation.navigate("Home")}
-                />
-            </View>
-        </View>
-    );
+  const navigation = useNavigation();
+  return (
+    <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", margin: 10 }}>
+      <View style={{ marginLeft: 10, marginRight: 5, width: 80 }}>
+        <Button title="Retake" onPress={reloadPage} />
+      </View>
+      <View style={{ marginLeft: 10, marginRight: 5, width: 80 }}>
+        <Button title="Home" onPress={() => navigation.navigate("Home")} />
+      </View>
+    </View>
+  );
 };
 
 const Answers = ({ result }) => (
-    <View>
-        {result.length ? (
-            <SafeAreaView style={{ paddingTop: 25, display: "flex", flex: 1,paddingLeft: 20 }}>
-                <Text style={{ fontWeight: "bold" }}>Answers:</Text>
-                <View>
-                    <FlatList
-                        data={result}
-                        renderItem={({ item, index }) => (
-                            <View>
-                                <Text>
-                                    {item.question}
-                                    <Text
-                                        style={{
-                                            color:
-                                                item.answerCorrect
-                                                    ? "green"
-                                                    : "red",
-                                        }}
-                                    >
-                                        {item.answerInput}
-                                        {!item.answerCorrect ? (
-                                            <Text style={{ color: "green" }}>
-                                                <Entypo name="cross" size={24} color="red" style={{
-                                                        marginBottom: -2
-                                                    }}/>
-                                                <Entypo name="emoji-sad" size={24} style={{
-                                                        marginBottom: -2
-                                                    }} color="red" />
-                                                {"   "}
-                                                {item.correctAnswer}
-                                                <AntDesign name="checkcircleo" size={24} color="green"
-                                                    style={{ marginBottom: -2 }}
-                                                />
-                                                <Feather name="smile" size={24} color="green"
-                                                    style={{
-                                                        marginBottom: -2,
-                                                    }}
-                                                />
-                                            </Text>
-                                        ) : (
-                                            <Text>
-                                               <AntDesign name="checkcircleo" size={24} color="green" 
-                                                    style={{
-                                                        marginBottom: -2,
-                                                    }}
-                                                />
-                                                <Feather name="smile" size={24} color="green"
-                                                    style={{
-                                                        marginBottom: -2,
-                                                    }}
-                                                />
-                                            </Text>
-                                        )}
-                                    </Text>
-                                </Text>
-                            </View>
-                        )}
-                    />
-                </View>
-            </SafeAreaView>
-        ) : null}
-    </View>
+  <SafeAreaView style={{ paddingTop: 10, flex: 1, paddingLeft: 20 }}>
+    <Text style={{ fontWeight: "bold" }}>Answers:</Text>
+    <FlatList
+      data={result}
+      keyExtractor={(item) => item.key}
+      renderItem={({ item }) => (
+        <View>
+          <Text>
+            {item.question}
+            <Text style={{ color: item.answerCorrect ? "green" : "red" }}>
+              {item.answerInput}
+              {!item.answerCorrect && (
+                <Text>
+                  {" → "}
+                  {item.correctAnswer}
+                </Text>
+              )}
+            </Text>
+          </Text>
+        </View>
+      )}
+    />
+  </SafeAreaView>
 );
 
-const Result = ({ mode, reloadPage, result, countdownTime }) => {
-    console.log('derd, results', result)
-    return (
-        <View
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: -75,
-            }}
-        >
-            <ResultStatement
-                result={result}
-                countdownTime={countdownTime}
-                mode={mode}
-            />
-            <ResultOptions reloadPage={reloadPage} />
-            <Answers result={result} />
-        </View>
-    );
-}
+const Result = ({ mode, result, reloadPage, gameStats }) => {
+  return (
+    <View style={{ display: "flex", justifyContent: "center", marginTop: -50 }}>
+      <ResultStatement result={result} mode={mode} gameStats={gameStats} />
+      <ResultOptions reloadPage={reloadPage} />
+      {result.length > 0 && <Answers result={result} />}
+    </View>
+  );
+};
 
 export default Result;

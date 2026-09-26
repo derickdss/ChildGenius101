@@ -1,37 +1,56 @@
-import react, { useState, useEffect } from "react";
+import react, { useState, useEffect, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
-import { TextInput, Text, View, Button } from "react-native";
+import { Vibration, Text, View, Button } from "react-native";
+import { recordGame } from "../utils/storage";
 import { getRandomFloat } from "../utils/getRandomInt";
 import getRandomInt from "../utils/getRandomInt";
 import shuffleArray from "../utils/shuffleArray";
 import styles from "../styles/App.styles";
-import Buttons from "./Buttons";
 import StopWatch from "./StopWatch";
 import AnswerButtons from "./AnswerButtons";
 import NumberPad from "./NumberPad";
-import { getAnswer, getAnswersArray } from "./Answers";
+import { getAnswersArray } from "./Answers";
 import { OPERATIONS } from "./Constants";
 
-export default function QuestionBlock({
-  operation,
-  mode,
-  mathLevel,
-  setQuizComplete,
-  correctAnswerCount,
-  setCorrectAnswerCount,
-  wrongAnswerCount,
-  setWrongAnswerCount,
-  setResult,
-  setTimerValue,
-  timerValue,
-}) {
-  const [answerCorrect, setAnswerCorrect] = useState();
+const QUESTION_COUNT = 10;
+const CHALLENGE_SECONDS = 60;
+
+// Answers.js expects raw JS operators, while Constants.js uses display symbols.
+const ANSWER_OPERATORS = {
+  Addition: "+",
+  Subtraction: "-",
+  Multiplication: "*",
+  Division: "/",
+  Decimal: "+",
+};
+
+export default function QuestionBlock({ operation, mode, mathLevel, onQuizComplete }) {
+  const [operand1, setOperand1] = useState();
+  const [operand2, setOperand2] = useState();
+  const [answer, setAnswer] = useState();
+  const [answerOptions, setAnswerOptions] = useState([]);
+  const [questionNumber, setQuestionNumber] = useState(0);
+
+  // Practice mode: the chosen multiple-choice answer.
   const [answerValue, setAnswerValue] = useState("  ");
-  const [inputValue, setInputValue] = useState("  ");
-  const [results, setResults] = useState([]);
+  // Challenge mode: what the child has typed on the number pad so far.
+  const [answerSubString, setAnswerSubString] = useState("");
+
+  const [answerCorrect, setAnswerCorrect] = useState();
   const [answerHighlightStyle, setAnswerHighlightStyle] = useState(null);
-  const [stopTimer, setStopTimer] = useState(false);
-  const [previousQuestion, setPreviousQuestion] = useState("");
+  // Display-only counters (resultsRef is the source of truth).
+  const [correctCount, setCorrectCount] = useState(0);
+  const [wrongCount, setWrongCount] = useState(0);
+  const [currentStreak, setCurrentStreak] = useState(0);
+
+  const [finished, setFinished] = useState(false);
+  // ref mirror of the results list so finishQuiz always sees every answer,
+  // even the one pushed in the same tick (state updates are async)
+  const resultsRef = useRef([]);
+  const previousQuestionRef = useRef("");
+  const advancingRef = useRef(false);
+  const advanceTimeoutRef = useRef(null);
+
   let answerStyle = [styles.questionBlock, styles.answer, answerHighlightStyle];
   const messageStatement =
     answerValue !== "  "
@@ -39,215 +58,199 @@ export default function QuestionBlock({
         ? "Correct answer!"
         : "Incorrect answer"
       : "";
-  const [operand1, setOperand1] = useState();
-  const [operand2, setOperand2] = useState();
-  const [answer, setAnswer] = useState();
-  const [answerOptions, setAnswerOptions] = useState([]);
-  const [questionNumber, setQuestionNumber] = useState(0);
-  const [answerSubString, setAnswerSubString] = useState(" ");
 
-  const [maxOperandValue, setMaxOperandValue] = useState(mathLevel);
-  const maxOptionRandomValue = 5;
-  const numberOfQuestionPerExercise = 10;
-  const isDecimal = operation === 'Decimal';
+  const isDecimal = operation === "Decimal";
   const mixedDecimal = isDecimal && mathLevel > 4;
-  const threeDecimalPlaces = isDecimal && mathLevel > 7 ;
+  const threeDecimalPlaces = isDecimal && mathLevel > 7;
+  const displayOperator = OPERATIONS.find((op) => op.name === operation)?.operator || "+";
 
-  const operator = OPERATIONS[OPERATIONS.findIndex((element) => element.name === operation)].operator
-  const setNumpadValue = (answer) => {
-    if(answerSubString === ".") {
-      setAnswerSubString(`0${answerSubString}`);
-    }
-    if (answerSubString) {
-      setAnswerSubString(`${answerSubString}${answer}`);
-    } else {
-      setAnswerSubString(`${answer}`);
+  const vibrate = (pattern) => {
+    try {
+      const p = Vibration.vibrate(pattern);
+      if (p && p.catch) p.catch(() => {});
+    } catch (e) {
+      // vibration is a nice-to-have; never let it break the game
     }
   };
 
-  const setNumpadSubStringToAnswerValue = () => {
-    let decimalAnswer=0;
-    let nonDecimalAnswer=0;
-    console.log('derd, setting numpad substring with', answerSubString)
-    if(isDecimal) {
-      decimalAnswer = parseFloat(answerSubString).toFixed(threeDecimalPlaces ? 3 : 2);
-    } else {
-      nonDecimalAnswer = parseInt(answerSubString);
-    }
-    console.log('derd, setting numpad substring with decimalAnswer', decimalAnswer)
-    setAnswerValue( isDecimal ? decimalAnswer : nonDecimalAnswer);
-    setTimeout(function () {
-      setQuestionAndAnswers();
-    }, 500);
-  };
-
-  const setBackspaceNumpadValue = () => {
-    if (answerSubString) {
-      setAnswerSubString(
-        `${answerSubString.substring(0, answerSubString.length - 1)}`
-      );
-    }
-  };
-
-  const functionToSetAnswerValue = (answerEntered) => {
-    setAnswerValue( answerEntered === 1 ? parseFloat(answerEntered).toFixed(2) : answerEntered )
-  }
-
-  const setQuestionAndAnswers = async () => {
-    console.log('derd, results', results)
-    console.log('derd, answer', answerValue)
-    if (answerValue !== "  " && mode === "Practice") {
-      setResults([
-        ...results,
-        {
-          key: `${operand1}_${operator}_${operand2}_${results.length}`,
-          question: `${operand1} ${operator} ${operand2} = `,
-          answerInput: answerValue,
-          correctAnswer: answer,
-          answerCorrect: answerValue == answer,
-        },
-      ]);
-    } else if (answerSubString !== " " && mode === "Challenge") {
-      setResults([
-        ...results,
-        {
-          key: `${operand1}_${operator}_${operand2}_${results.length}`,
-          question: `${operand1} ${operator} ${operand2} = `,
-          answerInput: isDecimal ? parseFloat(answerSubString) : parseInt(answerSubString),
-          correctAnswer: answer,
-          answerCorrect: isDecimal ? parseFloat(answerSubString) == answer : parseInt(answerSubString) == answer,
-        },
-      ]);
-    }
-    setAnswerSubString();
-    setAnswerHighlightStyle(null);
-    setQuestionNumber(questionNumber + 1);
-    setInputValue("  ");
-    setAnswerValue("  ");
-    setAnswerCorrect();
-
-    let numberOne = isDecimal ? getRandomFloat( mixedDecimal, threeDecimalPlaces ) : getRandomInt(1, maxOperandValue, mixedDecimal);
-    let numberTwo = isDecimal ? getRandomFloat( mixedDecimal, threeDecimalPlaces ) : getRandomInt(1, maxOperandValue, mixedDecimal);
-    const numberOneTwoCombination = `${numberOne}${numberTwo}`;
-    while ( numberOneTwoCombination === previousQuestion ) {
-      numberOne = isDecimal ? getRandomFloat( mixedDecimal, threeDecimalPlaces ) : getRandomInt(1, maxOperandValue, mixedDecimal);
-      numberTwo = isDecimal ? getRandomFloat( mixedDecimal, threeDecimalPlaces ) : getRandomInt(1, maxOperandValue, mixedDecimal);
-    }
+  const generateQuestion = () => {
+    let numberOne;
+    let numberTwo;
+    let combination;
+    do {
+      numberOne = isDecimal
+        ? getRandomFloat(mixedDecimal, threeDecimalPlaces)
+        : getRandomInt(1, mathLevel);
+      numberTwo = isDecimal
+        ? getRandomFloat(mixedDecimal, threeDecimalPlaces)
+        : getRandomInt(1, mathLevel);
+      combination = `${numberOne}${numberTwo}`;
+    } while (combination === previousQuestionRef.current);
 
     if (operation === "Division") {
-      let result = numberOne * numberTwo;
-      let temp = numberOne;
-      numberOne = result;
-      setAnswer(temp);
-    }
-
-    setOperand1(numberOne);
-    setOperand2(numberTwo);
-
-    let answers = [];
-    if (operation === "Addition") {
-      const additionAnswers = getAnswersArray(numberOne, "+", numberTwo, mixedDecimal);
-      answers = additionAnswers;
-      setAnswer(numberOne + numberTwo);
+      // Pick divisor and quotient first, then show their product as the dividend.
+      const dividend = numberOne * numberTwo;
+      setAnswer(numberOne);
+      numberOne = dividend;
     } else if (operation === "Subtraction") {
       if (numberOne - numberTwo < 0) {
-        let temp = numberOne;
-        numberOne = numberTwo;
-        numberTwo = temp;
-        setOperand1(numberOne);
-        setOperand2(numberTwo);
+        [numberOne, numberTwo] = [numberTwo, numberOne];
       }
-      const subtractionAnswers = getAnswersArray(numberOne, "-", numberTwo, mixedDecimal);
-      answers = subtractionAnswers;
-      
       setAnswer(numberOne - numberTwo);
     } else if (operation === "Multiplication") {
-      const multiplicationAnswers = getAnswersArray(numberOne, "*", numberTwo, mixedDecimal);
-      answers = multiplicationAnswers;
       setAnswer(numberOne * numberTwo);
-    } else if (operation === "Division") {
-      const divisionAnswers = getAnswersArray(numberOne, "/", numberTwo, mixedDecimal);
-      answers = divisionAnswers;
-      setAnswer(numberOne / numberTwo);
     } else if (operation === "Decimal") {
-      const decimalAnswers = getAnswersArray(numberOne, "+", numberTwo, mixedDecimal, threeDecimalPlaces);
-      answers = decimalAnswers;
       setAnswer((parseFloat(numberOne) + parseFloat(numberTwo)).toFixed(2));
+    } else {
+      setAnswer(numberOne + numberTwo);
     }
-    setPreviousQuestion(`${numberOne}${numberTwo}`);
-    setAnswerOptions(shuffleArray(answers));
+
+    previousQuestionRef.current = combination;
+    setOperand1(numberOne);
+    setOperand2(numberTwo);
+    setAnswerOptions(
+      shuffleArray(
+        getAnswersArray(
+          numberOne,
+          ANSWER_OPERATORS[operation],
+          numberTwo,
+          mixedDecimal,
+          threeDecimalPlaces
+        )
+      )
+    );
   };
 
   useEffect(() => {
-    if (answerValue === "  ") {
-      return;
-    } else if (answerValue === answer) {
-      setAnswerHighlightStyle(styles.answerCorrect);
-      setAnswerCorrect(true);
-      setCorrectAnswerCount(correctAnswerCount + 1);
-      return;
-    }
-    setAnswerHighlightStyle(styles.answerInCorrect);
-    setWrongAnswerCount(wrongAnswerCount + 1);
-    setAnswerCorrect(false);
-  }, [answerValue]);
-
-  useEffect(() => {
-    setQuestionAndAnswers();
+    generateQuestion();
+    return () => clearTimeout(advanceTimeoutRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (questionNumber > numberOfQuestionPerExercise && mode === "Practice") {
-      setStopTimer(true);
-      setResult(results);
-    }
-  }, [questionNumber]);
+  const handlePracticeAnswer = (chosen) => {
+    if (answerValue !== "  ") return;
+    setAnswerValue(chosen);
+  };
 
   useEffect(() => {
-    if (mode === "Challenge" && timerValue === "01:00s") {
-      setStopTimer(true);
-      setResult(results);
+    if (answerValue === "  ") return;
+    const correct = answerValue == answer;
+    setAnswerCorrect(correct);
+    if (correct) {
+      setAnswerHighlightStyle(styles.answerCorrect);
+      setCorrectCount((count) => count + 1);
+      const newStreak = currentStreak + 1;
+      setCurrentStreak(newStreak);
+      vibrate(40);
+    } else {
+      setAnswerHighlightStyle(styles.answerInCorrect);
+      setWrongCount((count) => count + 1);
+      setCurrentStreak(0);
+      vibrate([0, 120]);
     }
-  }, [timerValue]);
+  }, [answerValue]);
 
-  useEffect(() => {
-    if (stopTimer) {
-      setQuizComplete(true);
+  const finishQuiz = () => {
+    if (finished) return;
+    setFinished(true);
+    const finalResults = resultsRef.current;
+    const score = finalResults.filter((r) => r.answerCorrect).length;
+    recordGame({ operation, mode, score }).then((info) =>
+      onQuizComplete(finalResults, info)
+    );
+  };
+
+  const buildResult = (answerInput) => ({
+    key: `${operand1}_${displayOperator}_${operand2}_${resultsRef.current.length}`,
+    question: `${operand1} ${displayOperator} ${operand2} = `,
+    answerInput,
+    correctAnswer: answer,
+    answerCorrect: answerInput == answer,
+  });
+
+  const recordAndAdvance = () => {
+    if (advancingRef.current || finished) return;
+    advancingRef.current = true;
+
+    let recorded = null;
+    if (mode === "Practice" && answerValue !== "  ") {
+      recorded = buildResult(answerValue);
+    } else if (mode === "Challenge" && answerSubString !== "") {
+      const parsed = isDecimal ? parseFloat(answerSubString) : parseInt(answerSubString, 10);
+      recorded = buildResult(parsed);
     }
-  }, [stopTimer]);
 
-  const handleTextInput = (text) => {
-    const numberString = text.replace(/[^0-9]/gi, "");
-    setInputValue(numberString);
+    if (recorded) resultsRef.current = [...resultsRef.current, recorded];
+
+    setAnswerValue("  ");
+    setAnswerSubString("");
+    setAnswerCorrect();
+    if (recorded) {
+      setAnswerHighlightStyle(
+        recorded.answerCorrect ? styles.answerCorrect : styles.answerInCorrect
+      );
+    }
+
+    const isLastPracticeQuestion =
+      mode === "Practice" && resultsRef.current.length >= QUESTION_COUNT;
+    if (isLastPracticeQuestion) {
+      finishQuiz();
+      advancingRef.current = false;
+      return;
+    }
+
+    // In Challenge mode, pause briefly so the child sees the green/red flash.
+    advanceTimeoutRef.current = setTimeout(() => {
+      setAnswerHighlightStyle(null);
+      generateQuestion();
+      setQuestionNumber((n) => n + 1);
+      advancingRef.current = false;
+    }, mode === "Challenge" ? 600 : 0);
+  };
+
+  const handleTimeUp = () => {
+    finishQuiz();
+  };
+
+  const setNumpadValue = (digit) => {
+    setAnswerSubString((current) => {
+      if (digit === ".") {
+        if (current.includes(".")) return current;
+        return current === "" ? "0." : `${current}.`;
+      }
+      if (current === "" || current === "0") return `${digit}`;
+      return `${current}${digit}`;
+    });
+  };
+
+  const backspaceNumpadValue = () => {
+    setAnswerSubString((current) => current.slice(0, -1));
   };
 
   return (
-    <View>
+    <View style={{ width: "100%" }}>
       <View style={styles.section}>
-        <View style={{ display: "flex" }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text>
-            Question {questionNumber}
-            {mode === "Practice" && `/10`}
-            {mode === "Practice" && (
-              <>
-                [ Score :{" "}
-                <Text style={{ color: "green" }}>{correctAnswerCount}</Text> /{" "}
-                <Text style={{ color: "red" }}>{wrongAnswerCount}</Text> ]
-              </>
-            )}
+            Question {questionNumber + 1}
+            {mode === "Practice" && `/${QUESTION_COUNT}`}
           </Text>
+          {currentStreak >= 2 && (
+            <Text style={{ fontSize: 18, fontWeight: "bold", marginLeft: 10 }}>
+              🔥 {currentStreak} in a row!
+            </Text>
+          )}
         </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            marginLeft: 13,
-          }}
-        >
-          <Text style={[styles.questionBlock, styles.operand]}>{operand1}</Text>
-          <Text style={[styles.questionBlock, styles.operator]}>
-            {operator}
+        {mode === "Practice" && (
+          <Text style={{ marginTop: 4 }}>
+            [ Score:{" "}
+            <Text style={{ color: "green" }}>{correctCount}</Text> /{" "}
+            <Text style={{ color: "red" }}>{wrongCount}</Text> ]
           </Text>
+        )}
+        <View style={{ flexDirection: "row", marginLeft: 13, marginTop: 10 }}>
+          <Text style={[styles.questionBlock, styles.operand]}>{operand1}</Text>
+          <Text style={[styles.questionBlock, styles.operator]}>{displayOperator}</Text>
           <Text style={[styles.questionBlock, styles.operand]}>{operand2}</Text>
           <Text style={[styles.questionBlock, styles.equals]}>=</Text>
           <Text style={answerStyle}>
@@ -267,53 +270,37 @@ export default function QuestionBlock({
           {messageStatement}
         </Text>
       ) : (
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: "bold",
-            textAlign: "center",
-            color: "blue",
-          }}
-        >
-          {" "}
-        </Text>
+        <Text style={{ fontSize: 20 }}>{" "}</Text>
       )}
       <View style={styles.section}>
         {mode === "Challenge" ? (
-          <NumberPad
-            answerValue={answerSubString}
-            setNumpadValue={setNumpadValue}
-            setAnswerValue={setNumpadSubStringToAnswerValue}
-            backspaceNumpadValue={setBackspaceNumpadValue}
-            operation={operation}
-          />
-        ) : (
-          <AnswerButtons
-            values={answerOptions}
-            answerValue={answerValue}
-            setAnswerValue={functionToSetAnswerValue}
-            rows={2}
-          />
-        )}
-        {mode === "Challenge" ? (
-          <StopWatch stop={stopTimer} saveTimerValue={setTimerValue} />
-        ) : null}
-        {mode === "Practice" ? (
-          <View
-            style={{
-              margin: 10,
-              width: 140,
-            }}
-          >
-            <Button
-              color={"purple"}
-              style={{}}
-              title={"Next"}
-              onPress={() => setQuestionAndAnswers()}
-              disabled={answerValue === "  " && inputValue === "  "}
+          <>
+            <StopWatch initialTime={CHALLENGE_SECONDS} onTimeUp={handleTimeUp} />
+            <NumberPad
+              answerValue={answerSubString}
+              setNumpadValue={setNumpadValue}
+              setAnswerValue={recordAndAdvance}
+              backspaceNumpadValue={backspaceNumpadValue}
+              operation={operation}
             />
-          </View>
-        ) : null}
+          </>
+        ) : (
+          <>
+            <AnswerButtons
+              values={answerOptions}
+              answerValue={answerValue}
+              setAnswerValue={handlePracticeAnswer}
+            />
+            <View style={{ margin: 10, width: 140 }}>
+              <Button
+                color={"purple"}
+                title={"Next"}
+                onPress={recordAndAdvance}
+                disabled={answerValue === "  "}
+              />
+            </View>
+          </>
+        )}
       </View>
       <StatusBar style="auto" />
     </View>
