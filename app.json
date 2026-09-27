@@ -29,7 +29,7 @@
     ],
     "android": {
       "package": "com.child.genius",
-      "versionCode": 19,
+      "versionCode": 21,
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#FFFFFF"
