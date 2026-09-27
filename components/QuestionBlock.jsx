@@ -1,6 +1,6 @@
 import react, { useState, useEffect, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Vibration, Text, View, Button } from "react-native";
+import { Vibration, Text, View, Button, Animated } from "react-native";
 import { recordGame } from "../utils/storage";
 import { getRandomFloat } from "../utils/getRandomInt";
 import getRandomInt from "../utils/getRandomInt";
@@ -14,6 +14,9 @@ import { OPERATIONS } from "./Constants";
 
 const QUESTION_COUNT = 10;
 const CHALLENGE_SECONDS = 60;
+// Total on-screen time of the "Correct!"/"Wrong!" background flash in
+// Challenge mode (fade-in + hold + fade-out). It never delays the game.
+const FLASH_MS = 700;
 
 // Answers.js expects raw JS operators, while Constants.js uses display symbols.
 const ANSWER_OPERATORS = {
@@ -49,7 +52,11 @@ export default function QuestionBlock({ operation, mode, mathLevel, onQuizComple
   const resultsRef = useRef([]);
   const previousQuestionRef = useRef("");
   const advancingRef = useRef(false);
-  const advanceTimeoutRef = useRef(null);
+  // Challenge mode: subtle background flash of "Correct!"/"Wrong!" in the
+  // top corner while the child reads the new question. Never blocks input.
+  const [flash, setFlash] = useState(null);
+  const flashAnim = useRef(new Animated.Value(0)).current;
+  const flashAnimationRef = useRef(null);
 
   let answerStyle = [styles.questionBlock, styles.answer, answerHighlightStyle];
   const messageStatement =
@@ -123,7 +130,7 @@ export default function QuestionBlock({ operation, mode, mathLevel, onQuizComple
 
   useEffect(() => {
     generateQuestion();
-    return () => clearTimeout(advanceTimeoutRef.current);
+    return () => flashAnimationRef.current && flashAnimationRef.current.stop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -168,6 +175,22 @@ export default function QuestionBlock({ operation, mode, mathLevel, onQuizComple
     answerCorrect: answerInput == answer,
   });
 
+  // Fade in, hold briefly, then fade out — purely visual feedback that
+  // plays while the child is already looking at the next question.
+  const showFlash = (correct) => {
+    setFlash({ correct });
+    if (flashAnimationRef.current) flashAnimationRef.current.stop();
+    flashAnim.setValue(0);
+    const fadeIn = 120;
+    const fadeOut = 250;
+    flashAnimationRef.current = Animated.sequence([
+      Animated.timing(flashAnim, { toValue: 0.8, duration: fadeIn, useNativeDriver: true }),
+      Animated.delay(Math.max(FLASH_MS - fadeIn - fadeOut, 0)),
+      Animated.timing(flashAnim, { toValue: 0, duration: fadeOut, useNativeDriver: true }),
+    ]);
+    flashAnimationRef.current.start();
+  };
+
   const recordAndAdvance = () => {
     if (advancingRef.current || finished) return;
     advancingRef.current = true;
@@ -185,11 +208,7 @@ export default function QuestionBlock({ operation, mode, mathLevel, onQuizComple
     setAnswerValue("  ");
     setAnswerSubString("");
     setAnswerCorrect();
-    if (recorded) {
-      setAnswerHighlightStyle(
-        recorded.answerCorrect ? styles.answerCorrect : styles.answerInCorrect
-      );
-    }
+    setAnswerHighlightStyle(null);
 
     const isLastPracticeQuestion =
       mode === "Practice" && resultsRef.current.length >= QUESTION_COUNT;
@@ -199,13 +218,14 @@ export default function QuestionBlock({ operation, mode, mathLevel, onQuizComple
       return;
     }
 
-    // In Challenge mode, pause briefly so the child sees the green/red flash.
-    advanceTimeoutRef.current = setTimeout(() => {
-      setAnswerHighlightStyle(null);
-      generateQuestion();
-      setQuestionNumber((n) => n + 1);
-      advancingRef.current = false;
-    }, mode === "Challenge" ? 600 : 0);
+    // Advance straight to the next question — no pause. In Challenge mode
+    // we flash "Correct!"/"Wrong!" in the background while it's on screen.
+    generateQuestion();
+    setQuestionNumber((n) => n + 1);
+    if (mode === "Challenge" && recorded) {
+      showFlash(recorded.answerCorrect);
+    }
+    advancingRef.current = false;
   };
 
   const handleTimeUp = () => {
@@ -229,6 +249,27 @@ export default function QuestionBlock({ operation, mode, mathLevel, onQuizComple
 
   return (
     <View style={{ width: "100%" }}>
+      {mode === "Challenge" && flash ? (
+        // Background feedback only: sits in the top corner next to the
+        // question, fades in/out, and never intercepts touches.
+        <Animated.Text
+          pointerEvents="none"
+          style={[
+            {
+              position: "absolute",
+              top: 6,
+              right: 14,
+              zIndex: 10,
+              fontSize: 16,
+              fontWeight: "bold",
+              color: flash.correct ? "#2e7d32" : "#c62828",
+            },
+            { opacity: flashAnim },
+          ]}
+        >
+          {flash.correct ? "Correct!" : "Wrong!"}
+        </Animated.Text>
+      ) : null}
       <View style={styles.section}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text>
