@@ -93,7 +93,7 @@ const Answers = ({ result }) => (
 
 const Result = ({ mode, result, reloadPage, gameStats }) => {
   return (
-    <View style={{ display: "flex", justifyContent: "center", marginTop: -50 }}>
+    <View style={{ padding: '15px', flex: 1}}>
       <ResultStatement result={result} mode={mode} gameStats={gameStats} />
       <ResultOptions reloadPage={reloadPage} />
       {result.length > 0 && <Answers result={result} />}

@@ -19,16 +19,17 @@ const NumberPad = ({
   ];
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       {rows.map((row) => (
-        <View style={{ flexDirection: "row" }} key={row[0]}>
+        <View style={{ flexDirection: "row", flex: 1, paddingVertical: 6, alignItems: "center" }} key={row[0]}>
           {row.map((column) => (
             <TouchableHighlight
               key={column}
               onPress={() => setNumpadValue(column)}
               style={{
-                margin: 6,
-                height: 60,
+                marginHorizontal: 6,
+                height: "100%",
+                maxHeight: 80,
                 width,
                 backgroundColor: "rgb(33, 150, 243)",
                 justifyContent: "center",
@@ -41,12 +42,13 @@ const NumberPad = ({
           ))}
         </View>
       ))}
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", flex: 1, paddingVertical: 6, alignItems: "center" }}>
         <TouchableHighlight
           onPress={() => setNumpadValue(0)}
           style={{
-            margin: 6,
-            height: 60,
+            marginHorizontal: 6,
+            height: "100%",
+            maxHeight: 80,
             width: width * 1.525,
             backgroundColor: "rgb(33, 150, 243)",
             justifyContent: "center",
@@ -60,8 +62,9 @@ const NumberPad = ({
           onPress={() => setNumpadValue(".")}
           disabled={operation !== "Decimal"}
           style={{
-            margin: 6,
-            height: 60,
+            marginHorizontal: 6,
+            height: "100%",
+            maxHeight: 80,
             width: width * 1.525,
             backgroundColor: operation !== "Decimal" ? "grey" : "rgb(33, 150, 243)",
             justifyContent: "center",
@@ -72,13 +75,14 @@ const NumberPad = ({
           </View>
         </TouchableHighlight>
       </View>
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", flex: 1, paddingVertical: 6, alignItems: "center" }}>
         <TouchableHighlight
           onPress={backspaceNumpadValue}
           disabled={!answerValue}
           style={{
-            margin: 6,
-            height: 60,
+            marginHorizontal: 6,
+            height: "100%",
+            maxHeight: 80,
             padding: 6,
             width: width * 1.525,
             backgroundColor: answerValue ? "red" : "grey",
@@ -93,8 +97,9 @@ const NumberPad = ({
           onPress={setAnswerValue}
           disabled={!answerValue}
           style={{
-            margin: 6,
-            height: 60,
+            marginHorizontal: 6,
+            height: "100%",
+            maxHeight: 80,
             padding: 6,
             width: width * 1.525,
             backgroundColor: answerValue ? "green" : "grey",
