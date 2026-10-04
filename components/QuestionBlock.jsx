@@ -248,7 +248,7 @@ export default function QuestionBlock({ operation, mode, mathLevel, onQuizComple
   };
 
   return (
-    <View style={{ width: "100%" }}>
+    <View style={{ width: "100%", flex: 1 }}>
       {mode === "Challenge" && flash ? (
         // Background feedback only: sits in the top corner next to the
         // question, fades in/out, and never intercepts touches.
@@ -313,7 +313,7 @@ export default function QuestionBlock({ operation, mode, mathLevel, onQuizComple
       ) : (
         <Text style={{ fontSize: 20 }}>{" "}</Text>
       )}
-      <View style={styles.section}>
+      <View style={[styles.section, { flex: 1}]}>
         {mode === "Challenge" ? (
           <>
             <StopWatch initialTime={CHALLENGE_SECONDS} onTimeUp={handleTimeUp} />
