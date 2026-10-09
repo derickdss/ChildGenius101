@@ -15,6 +15,7 @@ jest.mock("../../data/englishQuestions", () => ({
 jest.mock("expo-speech", () => ({
   speak: jest.fn(),
   stop: jest.fn(),
+  getAvailableVoicesAsync: jest.fn().mockResolvedValue([{ voiceURI: "en-US", name: "US English" }]),
 }));
 
 jest.mock("../../utils/storage", () => ({
@@ -62,5 +63,12 @@ describe("SpellingDictation (Practice)", () => {
     expect(results).toHaveLength(10);
     expect(results.every((r) => r.answerCorrect)).toBe(true);
     expect(stats).toEqual({ best: 10, isNewBest: true });
+  });
+
+  test("shows a warning when the device has no text-to-speech voices", async () => {
+    const SpeechMock = jest.requireMock("expo-speech");
+    SpeechMock.getAvailableVoicesAsync.mockResolvedValueOnce([]);
+    await render(<SpellingDictation mode="Practice" onQuizComplete={jest.fn()} />);
+    expect(await screen.findByText(/can't be spoken on this device/)).toBeTruthy();
   });
 });

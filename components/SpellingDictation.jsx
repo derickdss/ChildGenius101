@@ -9,6 +9,9 @@ import StopWatch from "./StopWatch";
 const QUESTION_COUNT = 10;
 const CHALLENGE_SECONDS = 60;
 const FLASH_MS = 700;
+// Android's TTS engine can swallow the very first utterance right after app
+// start, so the first word is spoken slightly after the question renders.
+const FIRST_SPEAK_DELAY_MS = 400;
 
 // Dictation spelling game.
 // Practice: the word is spoken, the kid taps letters from the bank to fill the
@@ -28,11 +31,13 @@ export default function SpellingDictation({ mode, onQuizComplete }) {
   const [currentStreak, setCurrentStreak] = useState(0);
   const [finished, setFinished] = useState(false);
   const [flash, setFlash] = useState(null);
+  const [ttsError, setTtsError] = useState(null);
   const resultsRef = useRef([]);
   const advancingRef = useRef(false);
   const idRef = useRef(0);
   const flashAnim = useRef(new Animated.Value(0)).current;
   const flashAnimationRef = useRef(null);
+  const speakTimerRef = useRef(null);
 
   const vibrate = (pattern) => {
     try {
@@ -43,22 +48,49 @@ export default function SpellingDictation({ mode, onQuizComplete }) {
 
   const speak = useCallback((word) => {
     try {
-      Speech.speak(word, { language: "en-US" });
-    } catch (e) {}
+      const p = Speech.speak(word, {
+        language: "en-US",
+        onStart: () => setTtsError(null),
+        onError: (e) => setTtsError((e && e.message) || "speech failed"),
+      });
+      if (p && p.catch) {
+        p.catch((e) => setTtsError((e && e.message) || "speech failed"));
+      }
+    } catch (e) {
+      setTtsError((e && e.message) || "speech failed");
+    }
   }, []);
 
-  const loadQuestion = useCallback((q) => {
+  const loadQuestion = useCallback((q, opts = {}) => {
     setQuestion(q);
     setSlots(Array(q.word.length).fill(null));
     setBank(q.bank.map((letter) => ({ id: ++idRef.current, letter })));
     setChecked(false);
     setAnswerCorrect(undefined);
-    speak(q.word);
+    if (opts.delaySpeak) {
+      speakTimerRef.current = setTimeout(() => speak(q.word), FIRST_SPEAK_DELAY_MS);
+    } else {
+      speak(q.word);
+    }
   }, [speak]);
 
   useEffect(() => {
-    loadQuestion(generateSpellingDictation(mode));
+    let cancelled = false;
+    loadQuestion(generateSpellingDictation(mode), { delaySpeak: true });
+    // If the device has no TTS engine at all, say so immediately instead of
+    // staying silent for the whole quiz.
+    try {
+      Speech.getAvailableVoicesAsync()
+        .then((voices) => {
+          if (!cancelled && (!voices || voices.length === 0)) {
+            setTtsError("no text-to-speech engine installed");
+          }
+        })
+        .catch(() => {});
+    } catch (e) {}
     return () => {
+      cancelled = true;
+      if (speakTimerRef.current) clearTimeout(speakTimerRef.current);
       if (flashAnimationRef.current) flashAnimationRef.current.stop();
       try { Speech.stop(); } catch (e) {}
     };
@@ -244,6 +276,26 @@ export default function SpellingDictation({ mode, onQuizComplete }) {
       >
         Listen and spell the word!
       </Text>
+
+      {ttsError ? (
+        <View
+          style={{
+            backgroundColor: "#FFF3E0",
+            borderColor: "#FB8C00",
+            borderWidth: 1,
+            borderRadius: 10,
+            padding: 10,
+            marginBottom: 10,
+            maxWidth: 320,
+          }}
+        >
+          <Text style={{ color: "#E65100", fontSize: 13 }}>
+            🔇 The word can't be spoken on this device ("{ttsError}"). Please
+            install/enable "Google Text-to-speech" in Android settings, then
+            reopen the app.
+          </Text>
+        </View>
+      ) : null}
 
       <View
         style={{
