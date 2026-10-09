@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { StatusBar, Text, View, Button, Animated, TouchableOpacity } from "react-native";
+import { StatusBar, Text, View, Button, Animated, TouchableOpacity, Platform } from "react-native";
 import { Vibration } from "react-native";
 import * as Speech from "expo-speech";
 import { generateSpellingDictation } from "../data/englishQuestions";
@@ -38,6 +38,9 @@ export default function SpellingDictation({ mode, onQuizComplete }) {
   const flashAnim = useRef(new Animated.Value(0)).current;
   const flashAnimationRef = useRef(null);
   const speakTimerRef = useRef(null);
+  const restartTimerRef = useRef(null);
+  const watchdogRef = useRef(null);
+  const speakStartedRef = useRef(false);
 
   const vibrate = (pattern) => {
     try {
@@ -47,17 +50,47 @@ export default function SpellingDictation({ mode, onQuizComplete }) {
   };
 
   const speak = useCallback((word) => {
-    try {
-      const p = Speech.speak(word, {
-        language: "en-US",
-        onStart: () => setTtsError(null),
-        onError: (e) => setTtsError((e && e.message) || "speech failed"),
-      });
-      if (p && p.catch) {
-        p.catch((e) => setTtsError((e && e.message) || "speech failed"));
+    const doSpeak = () => {
+      speakStartedRef.current = false;
+      try {
+        const p = Speech.speak(word, {
+          language: "en-US",
+          onStart: () => {
+            speakStartedRef.current = true;
+            setTtsError(null);
+          },
+          onError: (e) => {
+            const msg = e && e.message && e.message !== "undefined" ? e.message : "speech failed";
+            setTtsError(msg);
+          },
+        });
+        if (p && p.catch) {
+          p.catch((e) => setTtsError((e && e.message) || "speech failed"));
+        }
+      } catch (e) {
+        setTtsError((e && e.message) || "speech failed");
       }
-    } catch (e) {
-      setTtsError((e && e.message) || "speech failed");
+      // Watchdog: if the utterance never starts (browsers silently drop speech
+      // that isn't tied to a user gesture), tell the user to tap — a tap is a
+      // user gesture, which browsers require before allowing audio.
+      if (watchdogRef.current) clearTimeout(watchdogRef.current);
+      watchdogRef.current = setTimeout(() => {
+        if (!speakStartedRef.current) {
+          setTtsError("no sound? tap 🔊 Hear it again — browsers often block audio until you tap");
+        }
+      }, 1500);
+    };
+    // Interrupt any in-progress/queued speech so the new word starts right away.
+    try {
+      const s = Speech.stop();
+      if (s && s.catch) s.catch(() => {});
+    } catch (e) {}
+    if (Platform.OS === "web") {
+      // Chrome drops a speak() issued in the same tick as a cancel(); wait a beat.
+      if (restartTimerRef.current) clearTimeout(restartTimerRef.current);
+      restartTimerRef.current = setTimeout(doSpeak, 80);
+    } else {
+      doSpeak();
     }
   }, []);
 
@@ -83,7 +116,11 @@ export default function SpellingDictation({ mode, onQuizComplete }) {
       Speech.getAvailableVoicesAsync()
         .then((voices) => {
           if (!cancelled && (!voices || voices.length === 0)) {
-            setTtsError("no text-to-speech engine installed");
+            setTtsError(
+              Platform.OS === "web"
+                ? "the word can't be spoken in this browser — no text-to-speech voices found (try Chrome or Edge)"
+                : "the word can't be spoken on this device — install/enable \"Google Text-to-speech\" in Android settings, then reopen the app"
+            );
           }
         })
         .catch(() => {});
@@ -91,8 +128,13 @@ export default function SpellingDictation({ mode, onQuizComplete }) {
     return () => {
       cancelled = true;
       if (speakTimerRef.current) clearTimeout(speakTimerRef.current);
+      if (restartTimerRef.current) clearTimeout(restartTimerRef.current);
+      if (watchdogRef.current) clearTimeout(watchdogRef.current);
       if (flashAnimationRef.current) flashAnimationRef.current.stop();
-      try { Speech.stop(); } catch (e) {}
+      try {
+        const s = Speech.stop();
+        if (s && s.catch) s.catch(() => {});
+      } catch (e) {}
     };
   }, [mode]);
 
@@ -289,11 +331,7 @@ export default function SpellingDictation({ mode, onQuizComplete }) {
             maxWidth: 320,
           }}
         >
-          <Text style={{ color: "#E65100", fontSize: 13 }}>
-            🔇 The word can't be spoken on this device ("{ttsError}"). Please
-            install/enable "Google Text-to-speech" in Android settings, then
-            reopen the app.
-          </Text>
+          <Text style={{ color: "#E65100", fontSize: 13 }}>🔇 {ttsError}</Text>
         </View>
       ) : null}
 

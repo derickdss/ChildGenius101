@@ -71,4 +71,13 @@ describe("SpellingDictation (Practice)", () => {
     await render(<SpellingDictation mode="Practice" onQuizComplete={jest.fn()} />);
     expect(await screen.findByText(/can't be spoken on this device/)).toBeTruthy();
   });
+
+  test("hints the user to tap when speech never starts (autoplay-blocked)", async () => {
+    // The mock speak() never fires onStart, simulating a browser that
+    // silently swallows the utterance. The watchdog should surface a hint.
+    await render(<SpellingDictation mode="Practice" onQuizComplete={jest.fn()} />);
+    expect(
+      await screen.findByText(/tap 🔊 Hear it again/, {}, { timeout: 3000 })
+    ).toBeTruthy();
+  });
 });
