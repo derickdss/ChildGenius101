@@ -1,0 +1,98 @@
+// Syllable-count pools for the Syllables skill.
+// count = number of syllables; split = how the word breaks into syllables.
+
+const SYLLABLES = [
+  // 1 syllable
+  { word: "cat", count: 1, split: "cat", emoji: "🐱" },
+  { word: "dog", count: 1, split: "dog", emoji: "🐶" },
+  { word: "sun", count: 1, split: "sun", emoji: "☀️" },
+  { word: "hat", count: 1, split: "hat", emoji: "🎩" },
+  { word: "run", count: 1, split: "run", emoji: "🏃" },
+  { word: "red", count: 1, split: "red", emoji: "🔴" },
+  { word: "big", count: 1, split: "big", emoji: "🐘" },
+  { word: "cup", count: 1, split: "cup", emoji: "☕" },
+  { word: "bus", count: 1, split: "bus", emoji: "🚌" },
+  { word: "bed", count: 1, split: "bed", emoji: "🛏️" },
+  { word: "top", count: 1, split: "top", emoji: "🎯" },
+  { word: "map", count: 1, split: "map", emoji: "🗺️" },
+  { word: "cap", count: 1, split: "cap", emoji: "🧢" },
+  { word: "hop", count: 1, split: "hop", emoji: "🐇" },
+  { word: "bug", count: 1, split: "bug", emoji: "🐞" },
+  { word: "mug", count: 1, split: "mug", emoji: "☕" },
+  { word: "rug", count: 1, split: "rug", emoji: "🟥" },
+  { word: "sit", count: 1, split: "sit", emoji: "🪑" },
+  { word: "bit", count: 1, split: "bit", emoji: "🥜" },
+  { word: "hot", count: 1, split: "hot", emoji: "🌶️" },
+  { word: "dot", count: 1, split: "dot", emoji: "🔵" },
+  { word: "pot", count: 1, split: "pot", emoji: "🍲" },
+  { word: "fun", count: 1, split: "fun", emoji: "🎈" },
+  { word: "wet", count: 1, split: "wet", emoji: "💧" },
+  { word: "net", count: 1, split: "net", emoji: "🥅" },
+  { word: "bet", count: 1, split: "bet", emoji: "🎲" },
+  { word: "jam", count: 1, split: "jam", emoji: "🍓" },
+  { word: "fan", count: 1, split: "fan", emoji: "🌀" },
+  { word: "pen", count: 1, split: "pen", emoji: "🖊️" },
+  { word: "hen", count: 1, split: "hen", emoji: "🐔" },
+  { word: "leg", count: 1, split: "leg", emoji: "🦵" },
+  { word: "web", count: 1, split: "web", emoji: "🕸️" },
+  { word: "gem", count: 1, split: "gem", emoji: "💎" },
+  { word: "fox", count: 1, split: "fox", emoji: "🦊" },
+  { word: "box", count: 1, split: "box", emoji: "📦" },
+  { word: "mix", count: 1, split: "mix", emoji: "🥣" },
+  { word: "six", count: 1, split: "six", emoji: "6️⃣" },
+  { word: "fix", count: 1, split: "fix", emoji: "🔧" },
+  { word: "pin", count: 1, split: "pin", emoji: "📌" },
+  { word: "rim", count: 1, split: "rim", emoji: "⭕" },
+  { word: "dim", count: 1, split: "dim", emoji: "🌘" },
+  { word: "tan", count: 1, split: "tan", emoji: "🏖️" },
+  { word: "van", count: 1, split: "van", emoji: "🚐" },
+  { word: "bin", count: 1, split: "bin", emoji: "🗑️" },
+  { word: "fin", count: 1, split: "fin", emoji: "🐟" },
+
+  // 2 syllables
+  { word: "water", count: 2, split: "wa-ter", emoji: "💧" },
+  { word: "apple", count: 2, split: "ap-ple", emoji: "🍎" },
+  { word: "rain", count: 2, split: "ra-in", emoji: "🌧️" },
+  { word: "butter", count: 2, split: "but-ter", emoji: "🧈" },
+  { word: "mother", count: 2, split: "mo-ther", emoji: "👩" },
+  { word: "father", count: 2, split: "fa-ther", emoji: "👨" },
+  { word: "sister", count: 2, split: "sis-ter", emoji: "👧" },
+  { word: "window", count: 2, split: "win-dow", emoji: "🪟" },
+  { word: "garden", count: 2, split: "gar-den", emoji: "🌻" },
+  { word: "monkey", count: 2, split: "mon-key", emoji: "🐒" },
+  { word: "rabbit", count: 2, split: "rab-bit", emoji: "🐇" },
+  { word: "turtle", count: 2, split: "tur-tle", emoji: "🐢" },
+  { word: "panther", count: 2, split: "pan-ther", emoji: "🐆" },
+  { word: "popcorn", count: 2, split: "pop-corn", emoji: "🍿" },
+  { word: "elder", count: 2, split: "el-der", emoji: "👴" },
+  { word: "uncle", count: 2, split: "un-cle", emoji: "👨" },
+  { word: "cake", count: 2, split: "ca-ke", emoji: "🎂" },
+  { word: "table", count: 2, split: "ta-ble", emoji: "🪑" },
+  { word: "pencil", count: 2, split: "pen-cil", emoji: "✏️" },
+  { word: "candle", count: 2, split: "can-dle", emoji: "🕯️" },
+
+  // 3 syllables
+  { word: "banana", count: 3, split: "ba-na-na", emoji: "🍌" },
+  { word: "elephant", count: 3, split: "el-e-phant", emoji: "🐘" },
+  { word: "sunflower", count: 3, split: "sun-flow-er", emoji: "🌻" },
+  { word: "butterfly", count: 3, split: "but-ter-fly", emoji: "🦋" },
+  { word: "chocolate", count: 3, split: "choc-o-late", emoji: "🍫" },
+  { word: "pineapple", count: 3, split: "pin-e-apple", emoji: "🍍" },
+  { word: "canyon", count: 3, split: "can-yon", emoji: "🏜️" },
+
+  // 4 syllables
+  { word: "alligator", count: 4, split: "all-i-ga-tor", emoji: "🐊" },
+  { word: "watermelon", count: 4, split: "wa-ter-mel-on", emoji: "🍉" },
+  { word: "caterpillar", count: 4, split: "cat-er-pil-lar", emoji: "🐛" },
+  { word: "chimpanzee", count: 4, split: "chi-mpan-zee", emoji: "🐵" },
+  { word: "antelope", count: 4, split: "an-te-lope", emoji: "🦌" },
+  { word: "kangaroo", count: 4, split: "kan-ga-roo", emoji: "🦘" },
+  { word: "armadillo", count: 4, split: "ar-ma-dil-lo", emoji: "🦔" },
+  { word: "orangutan", count: 4, split: "o-ran-gu-tan", emoji: "🦧" },
+];
+
+export const SYLLABLE_COUNTS = [...new Set(SYLLABLES.map((s) => s.count))].sort(
+  (a, b) => a - b
+);
+
+export default SYLLABLES;
