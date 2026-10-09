@@ -2,6 +2,8 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./components/Home";
+import MathMenu from "./components/MathMenu";
+import EnglishMenu from "./components/EnglishMenu";
 import OperationScreen from "./components/OperationScreen";
 import PracticeChallenge from "./components/PracticeChallenge";
 
@@ -36,6 +38,8 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={HEADER_OPTIONS}>
         <Stack.Screen name="Home" component={Home} options={{ title: "Child Genius" }} />
+        <Stack.Screen name="Math" component={MathMenu} options={{ title: "Math" }} />
+        <Stack.Screen name="English" component={EnglishMenu} options={{ title: "English" }} />
         {OPERATION_SCREENS.map(({ name, component }) => (
           <Stack.Screen key={name} name={name} component={component} options={{ title: name }} />
         ))}
