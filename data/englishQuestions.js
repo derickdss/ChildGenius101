@@ -12,7 +12,7 @@
 
 import { LETTER_WORDS, CVC_WORDS } from "./phonics";
 import { SIGHT_WORD_PICTURES, SIGHT_WORD_SENTENCES } from "./sightWords";
-import { SPELLING_WORDS } from "./spelling";
+import { SPELLING_EASY_WORDS, SPELLING_HARD_WORDS } from "./spelling";
 import { PHONEME_WORDS } from "./phonemes";
 import SYLLABLES from "./syllables";
 
@@ -103,50 +103,25 @@ function sightWordsQuestion() {
   };
 }
 
-// ---- SPELLING --------------------------------------------------------------
-function misspelling(word) {
-  // Produce one plausible misspelling of the word.
-  if (word.length < 3) return word + "e";
-  const i = Math.floor(Math.random() * word.length);
-  const letters = "abcdefghijklmnopqrstuvwxyz";
-  let repl = pick(letters.split(""));
-  if (repl === word[i]) repl = repl === "a" ? "e" : "a";
-  return word.slice(0, i) + repl + word.slice(i + 1);
-}
+// ---- SPELLING (dictation) --------------------------------------------------
+// The kid hears a word and builds it by tapping letters from the bank.
+// Practice uses short words (3-4 letters), Challenge uses longer, trickier
+// words (5-8 letters). This skill has its own question shape because it is
+// not multiple choice - see components/SpellingDictation.jsx.
+const ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
 
-function spellingQuestion() {
-  const w = pick(SPELLING_WORDS);
-  if (Math.random() < 0.5) {
-    // Missing letter: blank one letter, pick the right one.
-    const idx = Math.floor(Math.random() * w.word.length);
-    const answer = w.word[idx];
-    const shown = w.word.slice(0, idx) + "_" + w.word.slice(idx + 1);
-    const correct = { label: answer };
-    const pool = "abcdefghijklmnopqrstuvwxyz".split("").filter((l) => l !== answer).map((l) => ({ label: l }));
-    const { options, correctIndex } = buildOptions(correct, pool);
-    return {
-      prompt: "Which letter is missing?",
-      display: shown,
-      displayKind: "letters",
-      options,
-      correctIndex,
-    };
-  }
-  // Word from picture: pick the correctly spelled word.
-  const correct = { label: w.word, emoji: w.emoji };
-  const pool = shuffle(
-    SPELLING_WORDS.filter((x) => x.word !== w.word).map((x) => ({ label: x.word, emoji: x.emoji }))
-  ).slice(0, 6);
-  // Add a couple of misspellings so the options are genuinely tricky.
-  pool.push({ label: misspelling(w.word), emoji: w.emoji });
-  pool.push({ label: misspelling(w.word), emoji: w.emoji });
-  const { options, correctIndex } = buildOptions(correct, pool);
+export function generateSpellingDictation(mode) {
+  const hard = mode === "Challenge";
+  const pool = hard ? SPELLING_HARD_WORDS : SPELLING_EASY_WORDS;
+  const entry = pick(pool);
+  const wordLetters = entry.word.split("");
+  const distractorCount = hard ? 6 : 4;
+  const distractors = Array.from({ length: distractorCount }, () => pick(ALPHABET));
   return {
-    prompt: "Pick the word that matches the picture.",
-    display: w.emoji,
-    displayKind: "emoji",
-    options,
-    correctIndex,
+    word: entry.word,
+    emoji: entry.emoji,
+    bank: shuffle([...wordLetters, ...distractors]),
+    difficulty: hard ? "hard" : "easy",
   };
 }
 
@@ -229,12 +204,14 @@ function syllablesQuestion() {
 const GENERATORS = {
   Phonics: phonicsQuestion,
   "Sight Words": sightWordsQuestion,
-  Spelling: spellingQuestion,
   Phonemes: phonemesQuestion,
   Syllables: syllablesQuestion,
 };
 
 export function generateEnglishQuestion(skill) {
+  if (skill === "Spelling") {
+    throw new Error('Spelling is a dictation game - use generateSpellingDictation(mode) instead.');
+  }
   const gen = GENERATORS[skill] || phonicsQuestion;
   return gen();
 }

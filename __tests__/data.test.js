@@ -1,6 +1,6 @@
 import { LETTER_WORDS, CVC_WORDS } from "../data/phonics";
 import { SIGHT_WORD_SENTENCES, SIGHT_WORD_PICTURES } from "../data/sightWords";
-import { SPELLING_WORDS } from "../data/spelling";
+import { SPELLING_EASY_WORDS, SPELLING_HARD_WORDS } from "../data/spelling";
 import { PHONEME_WORDS } from "../data/phonemes";
 import SYLLABLES, { SYLLABLE_COUNTS } from "../data/syllables";
 
@@ -43,10 +43,22 @@ describe("sight words data", () => {
 });
 
 describe("spelling data", () => {
-  test("each entry has a non-empty word", () => {
-    expect(SPELLING_WORDS.length).toBeGreaterThan(0);
-    SPELLING_WORDS.forEach((e) => {
-      expect(e.word.trim().length).toBeGreaterThan(0);
+  test("easy words are short (3-4 letters) with an emoji hint", () => {
+    expect(SPELLING_EASY_WORDS.length).toBeGreaterThan(0);
+    SPELLING_EASY_WORDS.forEach((e) => {
+      expect(e.word.trim().length).toBeGreaterThanOrEqual(3);
+      expect(e.word.trim().length).toBeLessThanOrEqual(4);
+      expect(e.word).toBe(e.word.toLowerCase());
+      expect(typeof e.emoji).toBe("string");
+    });
+  });
+
+  test("hard words are longer (5+ letters) with an emoji hint", () => {
+    expect(SPELLING_HARD_WORDS.length).toBeGreaterThan(0);
+    SPELLING_HARD_WORDS.forEach((e) => {
+      expect(e.word.trim().length).toBeGreaterThanOrEqual(5);
+      expect(e.word).toBe(e.word.toLowerCase());
+      expect(typeof e.emoji).toBe("string");
     });
   });
 });

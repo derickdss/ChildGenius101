@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View } from "react-native";
 import EnglishQuestionBlock from "./EnglishQuestionBlock";
+import SpellingDictation from "./SpellingDictation";
 import Result from "./Result";
 
 // Wrapper for one English skill (Phonics, Sight Words, Spelling, Phonemes, Syllables).
@@ -24,7 +25,11 @@ const EnglishScreen = ({ skill, route }) => {
   return (
     <View style={{ flex: 1, backgroundColor: "#F3F0FF", alignItems: "center" }}>
       {!quizComplete ? (
-        <EnglishQuestionBlock skill={skill} mode={route.params.mode} onQuizComplete={handleQuizComplete} />
+        skill === "Spelling" ? (
+          <SpellingDictation mode={route.params.mode} onQuizComplete={handleQuizComplete} />
+        ) : (
+          <EnglishQuestionBlock skill={skill} mode={route.params.mode} onQuizComplete={handleQuizComplete} />
+        )
       ) : (
         <Result mode={route.params.mode} result={results} reloadPage={reloadPage} gameStats={gameStats} />
       )}
