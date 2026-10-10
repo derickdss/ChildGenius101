@@ -28,11 +28,18 @@ const BigButton = ({ title, onPress, color, marginTop }) => (
 
 export default function PracticeChallenge({ navigation, route }) {
   const [mathLevel, setMathLevel] = useState(4);
+  // English skills (Phonics, Sight Words, ...) arrive with route.params.skill
+  // and skip the level picker; math operations use route.params.operation.
+  const isEnglish = Boolean(route.params.skill);
+  const target = isEnglish ? route.params.skill : route.params.operation;
 
   const categorySwitcher = (category) => {
     const cat = LEVEL_CATEGORIES.find((c) => c.category === category);
     if (cat) setMathLevel(cat.maxLevel);
   };
+
+  const navParams = (mode) =>
+    isEnglish ? { mode } : { mode, mathLevel };
 
   return (
     <View
@@ -44,66 +51,70 @@ export default function PracticeChallenge({ navigation, route }) {
       }}
     >
       <View style={{ width: 280 }}>
-        <Text style={{ textAlign: "center", fontSize: 16, marginBottom: 20, color: "#444" }}>
-          Pick a level, then choose how to play.
-        </Text>
-        <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10 }}>
-          {LEVEL_CATEGORIES.map((category, index) => (
-            <TouchableOpacityButton
-              key={category.category}
-              title={category.category}
-              onPress={() => categorySwitcher(category.category)}
+        {isEnglish ? (
+          <Text style={{ textAlign: "center", fontSize: 16, marginBottom: 20, color: "#444" }}>
+            {target}: pick how to play!
+          </Text>
+        ) : (
+          <>
+            <Text style={{ textAlign: "center", fontSize: 16, marginBottom: 20, color: "#444" }}>
+              Pick a level, then choose how to play.
+            </Text>
+            <View style={{ flexDirection: "row", justifyContent: "flex-start", marginBottom: 10 }}>
+              {LEVEL_CATEGORIES.map((category, index) => (
+                <TouchableOpacityButton
+                  key={category.category}
+                  title={category.category}
+                  onPress={() => categorySwitcher(category.category)}
+                  style={{
+                    marginLeft: index !== 0 ? 5 : 0,
+                    width: 80,
+                    height: 26,
+                    justifyContent: "center",
+                    backgroundColor: category.color,
+                    fontWeight: "bold",
+                  }}
+                />
+              ))}
+            </View>
+            <View
               style={{
-                marginLeft: index !== 0 ? 5 : 0,
-                width: 80,
-                height: 26,
+                flexDirection: "row",
+                flexWrap: "wrap",
                 justifyContent: "center",
-                backgroundColor: category.color,
-                fontWeight: "bold",
+                alignItems: "center",
+                margin: 4,
               }}
-            />
-          ))}
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: 4,
-          }}
-        >
-          {LEVELS.map((level) => (
-            <TouchableOpacityButton
-              key={level}
-              title={level}
-              onPress={() => setMathLevel(level)}
-              style={{
-                width: level === mathLevel ? 30 : 23,
-                height: level === mathLevel ? 30 : 23,
-                fontSize: 10,
-                borderRadius: 100,
-                backgroundColor: level > mathLevel ? "lightgrey" : "grey",
-                justifyContent: "center",
-              }}
-            />
-          ))}
-        </View>
-        <Text style={{ textAlign: "center", marginVertical: 12, color: "#555", fontWeight: "bold" }}>
-          Level {mathLevel}
-        </Text>
+            >
+              {LEVELS.map((level) => (
+                <TouchableOpacityButton
+                  key={level}
+                  title={level}
+                  onPress={() => setMathLevel(level)}
+                  style={{
+                    width: level === mathLevel ? 30 : 23,
+                    height: level === mathLevel ? 30 : 23,
+                    fontSize: 10,
+                    borderRadius: 100,
+                    backgroundColor: level > mathLevel ? "lightgrey" : "grey",
+                    justifyContent: "center",
+                  }}
+                />
+              ))}
+            </View>
+            <Text style={{ textAlign: "center", marginVertical: 12, color: "#555", fontWeight: "bold" }}>
+              Level {mathLevel}
+            </Text>
+          </>
+        )}
         <BigButton
           title="Practice — 10 questions"
-          onPress={() =>
-            navigation.navigate(route.params.operation, { mode: "Practice", mathLevel })
-          }
+          onPress={() => navigation.navigate(target, navParams("Practice"))}
           color="#7E57C2"
         />
         <BigButton
           title="Challenge — beat the clock!"
-          onPress={() =>
-            navigation.navigate(route.params.operation, { mode: "Challenge", mathLevel })
-          }
+          onPress={() => navigation.navigate(target, navParams("Challenge"))}
           color="#FF7043"
           marginTop={12}
         />

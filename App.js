@@ -2,7 +2,10 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./components/Home";
+import MathMenu from "./components/MathMenu";
+import EnglishMenu from "./components/EnglishMenu";
 import OperationScreen from "./components/OperationScreen";
+import EnglishScreen from "./components/EnglishScreen";
 import PracticeChallenge from "./components/PracticeChallenge";
 
 const HEADER_OPTIONS = {
@@ -17,9 +20,15 @@ const HEADER_OPTIONS = {
 };
 
 const OPERATIONS = ["Addition", "Subtraction", "Multiplication", "Division", "Decimal"];
+const ENGLISH_SKILLS = ["Phonics", "Sight Words", "Spelling", "Phonemes", "Syllables"];
 
 const makeOperationScreen = (operation) => {
   const Screen = (props) => <OperationScreen operation={operation} {...props} />;
+  return Screen;
+};
+
+const makeEnglishScreen = (skill) => {
+  const Screen = (props) => <EnglishScreen skill={skill} {...props} />;
   return Screen;
 };
 
@@ -29,6 +38,11 @@ const OPERATION_SCREENS = OPERATIONS.map((name) => ({
   component: makeOperationScreen(name),
 }));
 
+const ENGLISH_SCREENS = ENGLISH_SKILLS.map((name) => ({
+  name,
+  component: makeEnglishScreen(name),
+}));
+
 export default function App() {
   const Stack = createNativeStackNavigator();
 
@@ -36,7 +50,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={HEADER_OPTIONS}>
         <Stack.Screen name="Home" component={Home} options={{ title: "Child Genius" }} />
+        <Stack.Screen name="Math" component={MathMenu} options={{ title: "Math" }} />
+        <Stack.Screen name="English" component={EnglishMenu} options={{ title: "English" }} />
         {OPERATION_SCREENS.map(({ name, component }) => (
+          <Stack.Screen key={name} name={name} component={component} options={{ title: name }} />
+        ))}
+        {ENGLISH_SCREENS.map(({ name, component }) => (
           <Stack.Screen key={name} name={name} component={component} options={{ title: name }} />
         ))}
         <Stack.Screen
