@@ -2,7 +2,7 @@
   "expo": {
     "name": "Child Genius",
     "slug": "child-genius",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -21,7 +21,8 @@
         {
           "android": {
             "minSdkVersion": 24,
-            "targetSdkVersion": 36
+            "targetSdkVersion": 36,
+            "enableProguardInReleaseBuilds": true
           }
         }
       ],
@@ -29,7 +30,7 @@
     ],
     "android": {
       "package": "com.child.genius",
-      "versionCode": 24,
+      "versionCode": 25,
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#FFFFFF"
@@ -42,6 +43,8 @@
       "eas": {
         "projectId": "fd09f654-ffa5-44af-8767-ab7aa17bed4d"
       }
-    }
+    },
+
+
   }
 }
