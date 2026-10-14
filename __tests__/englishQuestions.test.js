@@ -1,6 +1,6 @@
 import { generateEnglishQuestion, generateSpellingDictation } from "../data/englishQuestions";
 
-const MCQ_SKILLS = ["Phonics", "Sight Words", "Phonemes", "Syllables"];
+const MCQ_SKILLS = ["Phonics", "Words & Sentences", "Phonemes", "Syllables"];
 const DISPLAY_KINDS = new Set(["letter", "word", "emoji", "letters", "blank"]);
 
 describe("generateEnglishQuestion", () => {

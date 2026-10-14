@@ -10,7 +10,7 @@
 //     correctIndex: number,
 //   }
 
-import { LETTER_WORDS, CVC_WORDS } from "./phonics";
+import { LETTER_WORDS } from "./phonics";
 import { SIGHT_WORD_PICTURES, SIGHT_WORD_SENTENCES } from "./sightWords";
 import { SPELLING_EASY_WORDS, SPELLING_HARD_WORDS } from "./spelling";
 import { PHONEME_WORDS } from "./phonemes";
@@ -45,10 +45,13 @@ function buildOptions(correct, pool) {
 }
 
 // ---- PHONICS ---------------------------------------------------------------
+// Both directions test the same skill (letter-sound correspondence) so the
+// test feels consistent: letter -> word, or word -> letter.
 function phonicsQuestion() {
+  const entry = pick(LETTER_WORDS);
+
+  // Direction 1: letter -> word. Show a letter, pick the word that starts with it.
   if (Math.random() < 0.5) {
-    // Letter sounds: show a letter, pick the word that starts with it.
-    const entry = pick(LETTER_WORDS);
     const letter = entry.letter;
     const correct = { label: entry.word, emoji: entry.emoji };
     const pool = LETTER_WORDS.filter((w) => w.letter !== letter).map((w) => ({ label: w.word, emoji: w.emoji }));
@@ -61,15 +64,15 @@ function phonicsQuestion() {
       correctIndex,
     };
   }
-  // CVC: show the three letters, pick the matching word.
-  const entry = pick(CVC_WORDS);
-  const correct = { label: entry.word, emoji: entry.emoji };
-  const pool = CVC_WORDS.filter((w) => w.word !== entry.word).map((w) => ({ label: w.word, emoji: w.emoji }));
+
+  // Direction 2: word -> letter. Show a picture, pick the letter the word starts with.
+  const correct = { label: entry.letter };
+  const pool = LETTER_WORDS.filter((w) => w.letter !== entry.letter).map((w) => ({ label: w.letter }));
   const { options, correctIndex } = buildOptions(correct, pool);
   return {
-    prompt: "What word do these letters make?",
-    display: entry.word.toUpperCase().split("").join("  "),
-    displayKind: "letters",
+    prompt: `Which letter does the word "${entry.word}" start with?`,
+    display: entry.emoji,
+    displayKind: "emoji",
     options,
     correctIndex,
   };
@@ -203,7 +206,7 @@ function syllablesQuestion() {
 
 const GENERATORS = {
   Phonics: phonicsQuestion,
-  "Sight Words": sightWordsQuestion,
+  "Words & Sentences": sightWordsQuestion,
   Phonemes: phonemesQuestion,
   Syllables: syllablesQuestion,
 };

@@ -4,7 +4,7 @@ import EnglishQuestionBlock from "./EnglishQuestionBlock";
 import SpellingDictation from "./SpellingDictation";
 import Result from "./Result";
 
-// Wrapper for one English skill (Phonics, Sight Words, Spelling, Phonemes, Syllables).
+// Wrapper for one English skill (Phonics, Words & Sentences, Spelling, Phonemes, Syllables).
 // Runs the quiz, then shows the Result screen with the game stats.
 const EnglishScreen = ({ skill, route }) => {
   const [results, setResults] = useState([]);

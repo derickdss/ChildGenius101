@@ -20,7 +20,7 @@ const HEADER_OPTIONS = {
 };
 
 const OPERATIONS = ["Addition", "Subtraction", "Multiplication", "Division", "Decimal"];
-const ENGLISH_SKILLS = ["Phonics", "Sight Words", "Spelling", "Phonemes", "Syllables"];
+const ENGLISH_SKILLS = ["Phonics", "Words & Sentences", "Spelling", "Phonemes", "Syllables"];
 
 const makeOperationScreen = (operation) => {
   const Screen = (props) => <OperationScreen operation={operation} {...props} />;

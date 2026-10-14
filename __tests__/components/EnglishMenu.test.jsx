@@ -16,7 +16,7 @@ describe("EnglishMenu screen", () => {
   test("lists all five English skills once stats load", async () => {
     await render(<EnglishMenu navigation={{ navigate: jest.fn() }} />);
     expect(await screen.findByText("Phonics")).toBeTruthy();
-    expect(screen.getByText("Sight Words")).toBeTruthy();
+    expect(screen.getByText("Words & Sentences")).toBeTruthy();
     expect(screen.getByText("Spelling")).toBeTruthy();
     expect(screen.getByText("Phonemes")).toBeTruthy();
     expect(screen.getByText("Syllables")).toBeTruthy();

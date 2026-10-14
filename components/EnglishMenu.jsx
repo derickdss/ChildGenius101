@@ -6,7 +6,7 @@ import { loadStats } from "../utils/storage";
 // EnglishMenu -> PracticeChallenge -> EnglishScreen (skill).
 const SKILLS = [
   { name: "Phonics", symbol: "🔤", color: "#7E57C2", subtitle: "Letter sounds & CVC words" },
-  { name: "Sight Words", symbol: "📖", color: "#26A69A", subtitle: "Words you know by sight" },
+  { name: "Words & Sentences", symbol: "📖", color: "#26A69A", subtitle: "Words in sentences & pictures" },
   { name: "Spelling", symbol: "✏️", color: "#FF7043", subtitle: "Missing letters & pictures" },
   { name: "Phonemes", symbol: "🔊", color: "#42A5F5", subtitle: "The sounds in words" },
   { name: "Syllables", symbol: "👏", color: "#FFA726", subtitle: "Clap the beats" },
