@@ -28,7 +28,7 @@ const BigButton = ({ title, onPress, color, marginTop }) => (
 
 export default function PracticeChallenge({ navigation, route }) {
   const [mathLevel, setMathLevel] = useState(4);
-  // English skills (Phonics, Sight Words, ...) arrive with route.params.skill
+  // English skills (Phonics, Words & Sentences, ...) arrive with route.params.skill
   // and skip the level picker; math operations use route.params.operation.
   const isEnglish = Boolean(route.params.skill);
   const target = isEnglish ? route.params.skill : route.params.operation;

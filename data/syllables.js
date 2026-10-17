@@ -48,11 +48,12 @@ const SYLLABLES = [
   { word: "van", count: 1, split: "van", emoji: "🚐" },
   { word: "bin", count: 1, split: "bin", emoji: "🗑️" },
   { word: "fin", count: 1, split: "fin", emoji: "🐟" },
+  { word: "rain", count: 1, split: "rain", emoji: "🌧️" },
+  { word: "cake", count: 1, split: "cake", emoji: "🎂" },
 
   // 2 syllables
   { word: "water", count: 2, split: "wa-ter", emoji: "💧" },
   { word: "apple", count: 2, split: "ap-ple", emoji: "🍎" },
-  { word: "rain", count: 2, split: "ra-in", emoji: "🌧️" },
   { word: "butter", count: 2, split: "but-ter", emoji: "🧈" },
   { word: "mother", count: 2, split: "mo-ther", emoji: "👩" },
   { word: "father", count: 2, split: "fa-ther", emoji: "👨" },
@@ -66,7 +67,7 @@ const SYLLABLES = [
   { word: "popcorn", count: 2, split: "pop-corn", emoji: "🍿" },
   { word: "elder", count: 2, split: "el-der", emoji: "👴" },
   { word: "uncle", count: 2, split: "un-cle", emoji: "👨" },
-  { word: "cake", count: 2, split: "ca-ke", emoji: "🎂" },
+  { word: "canyon", count: 2, split: "can-yon", emoji: "🏜️" },
   { word: "table", count: 2, split: "ta-ble", emoji: "🪑" },
   { word: "pencil", count: 2, split: "pen-cil", emoji: "✏️" },
   { word: "candle", count: 2, split: "can-dle", emoji: "🕯️" },
@@ -78,15 +79,14 @@ const SYLLABLES = [
   { word: "butterfly", count: 3, split: "but-ter-fly", emoji: "🦋" },
   { word: "chocolate", count: 3, split: "choc-o-late", emoji: "🍫" },
   { word: "pineapple", count: 3, split: "pin-e-apple", emoji: "🍍" },
-  { word: "canyon", count: 3, split: "can-yon", emoji: "🏜️" },
+  { word: "chimpanzee", count: 3, split: "chi-mpan-zee", emoji: "🐵" },
+  { word: "antelope", count: 3, split: "an-te-lope", emoji: "🦌" },
+  { word: "kangaroo", count: 3, split: "kan-ga-roo", emoji: "🦘" },
 
   // 4 syllables
   { word: "alligator", count: 4, split: "all-i-ga-tor", emoji: "🐊" },
   { word: "watermelon", count: 4, split: "wa-ter-mel-on", emoji: "🍉" },
   { word: "caterpillar", count: 4, split: "cat-er-pil-lar", emoji: "🐛" },
-  { word: "chimpanzee", count: 4, split: "chi-mpan-zee", emoji: "🐵" },
-  { word: "antelope", count: 4, split: "an-te-lope", emoji: "🦌" },
-  { word: "kangaroo", count: 4, split: "kan-ga-roo", emoji: "🦘" },
   { word: "armadillo", count: 4, split: "ar-ma-dil-lo", emoji: "🦔" },
   { word: "orangutan", count: 4, split: "o-ran-gu-tan", emoji: "🦧" },
 ];
